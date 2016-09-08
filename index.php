@@ -1,5 +1,5 @@
 <?php
-$files = array("eventHandler.js","general.js","init.js");
+$files = array("eventHandler.js","general.js","init.js","menue.js");
 $jsfile = "";
 foreach($files as $file){
     if(file_exists("lib/".$file)){
@@ -12,18 +12,29 @@ file_put_contents("general.js",$jsfile);
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>$Title$</title>
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="style.css">
+    <title></title>
 </head>
 <body>
-  <div id="dropzone" style="width:300px; height:300px; background-color: black;">
+<div id="menue-button">
+    <button class="btn btn-default" id="bu_menue" onclick="toggleMenue();">Open</button>
+</div>
+<div id="overlay-menue">
+    <ul class="list-group">
+        <a href="#"><li class="list-group-item">Menüpunkt 1</li></a>
+        <li class="list-group-item">Menüpunkt 2</li>
+        <li class="list-group-item">Menüpunkt 3</li>
+    </ul>
+</div>
+<div id="dropzone" style="width:100%; height:100%; background-color: black;">
 
-  </div>
+</div>
 </body>
 </html>
 
-<script type="text/javascript" src="lib/general.js"></script>
-<script type="text/javascript" src="lib/eventHandler.js"></script>
-<script type="text/javascript" src="lib/init.js"></script>
+<script src="general.js"></script>
 <script>
-InitDragAndDrop();
+    InitDragAndDrop();
+    initMenue();
 </script>
