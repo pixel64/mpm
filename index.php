@@ -1,5 +1,5 @@
 <?php
-$files = array("eventHandler.js","general.js","init.js","menue.js");
+$files = array("eventHandler.js","general.js","init.js","menue.js","messages.js");
 $jsfile = "";
 foreach($files as $file){
     if(file_exists("lib/".$file)){
@@ -22,14 +22,15 @@ file_put_contents("general.js",$jsfile);
 </div>
 <div id="overlay-menue">
     <ul class="list-group">
-        <a href="#"><li class="list-group-item">Menüpunkt 1</li></a>
-        <li class="list-group-item">Menüpunkt 2</li>
+        <a href="#" onclick="customAlert('Test Fehler!!!',1)"><li class="list-group-item">Sample Error</li></a>
+        <a href="#" onclick="customAlert('Test Fehler!!!')"><li class="list-group-item">Sample Notification</li></a>
         <li class="list-group-item">Menüpunkt 3</li>
     </ul>
 </div>
 <div id="dropzone" style="width:100%; height:100%; background-color: black;">
 
 </div>
+<div id="message"></div>
 </body>
 </html>
 

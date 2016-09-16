@@ -8,7 +8,7 @@ html, body {
     height: 10px;
     z-index: 4;
     top: 10px;
-    left: 10px;
+    left: 20px;
     position: absolute;
 }
 #overlay-menue{
@@ -21,4 +21,14 @@ html, body {
     position: absolute;
     background-color: white;
     display: none;
+}
+.overlay-message{
+    top:70px;
+    left:200px;
+    right: 200px;
+    z-index: 5;
+    position: absolute;
+}
+.overlay-message button{
+    float: right;
 }
