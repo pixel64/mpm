@@ -1,5 +1,6 @@
 /**
- * Created by pixel on 14.07.16.
+ * eventHandler.js
+ * Hier können vorher registrierte events programmiert werden
  */
 var handleDragOver = function(e){
   e.stopPropagation();
@@ -14,20 +15,23 @@ var handleDrop = function(e){
     //parseFile(f);
   }
 }/**
- * Created by pixel on 14.07.16.
+ * general.js
+ * Verantwortlich für alles allgemeine
  */
 var $id = function(id){
     return document.getElementById(id);
 }
 /**
- * Created by pixel on 14.07.16.
+ * init.js
+ * Verantwortlich für die initialisierung aller Komponenten
  */
 var InitDragAndDrop = function(){
   $id("dropzone").addEventListener("dragover", handleDragOver, false);
   $id("dropzone").addEventListener("drop", handleDrop, false);
 }
 /**
- * Created by pixel on 08.09.16.
+ * menue.js
+ * verantwortlich für das Menü
  */
 var initMenue = function () {
 
@@ -36,14 +40,27 @@ var toggleMenue = function () {
     var style = window.getComputedStyle($id("overlay-menue"));
     var display = style.getPropertyValue("display");
     if(display == "block"){
-        $id("bu_menue").innerHTML = "Open";
+        $id("bu_menue").innerHTML = "Menü";
         $id("overlay-menue").style.display = 'none';
     }else{
-        $id("bu_menue").innerHTML = "Close";
+        $id("bu_menue").innerHTML = "<<";
         $id("overlay-menue").style.display = 'block';
     }
+}
+
+var toggleFilter = function () {
+    var style = window.getComputedStyle($id("overlay-filter"));
+    var display = style.getPropertyValue("display");
+    if(display == "block"){
+        $id("bu_filter").innerHTML = "Filter";
+        $id("overlay-filter").style.display = 'none';
+    }else{
+        $id("bu_filter").innerHTML = ">>";
+        $id("overlay-filter").style.display = 'block';
+    }
 }/**
- * Created by pixel on 16.09.16.
+ * message.js
+ * Verantwortlich für custom alerts
  */
 var customAlert = function(text,type){
         document.getElementById("message").innerHTML= render_msg(text, type);

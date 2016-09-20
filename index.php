@@ -18,13 +18,30 @@ file_put_contents("general.js",$jsfile);
 </head>
 <body>
 <div id="menue-button">
-    <button class="btn btn-default" id="bu_menue" onclick="toggleMenue();">Open</button>
+    <button class="btn btn-default" id="bu_menue" onclick="toggleMenue();">Menü</button>
 </div>
 <div id="overlay-menue">
     <ul class="list-group">
         <a href="#" onclick="customAlert('Test Fehler!!!',1)"><li class="list-group-item">Sample Error</li></a>
         <a href="#" onclick="customAlert('Test Fehler!!!')"><li class="list-group-item">Sample Notification</li></a>
         <li class="list-group-item">Menüpunkt 3</li>
+    </ul>
+</div>
+<div id="filter-button">
+        <button class="btn btn-default" id="bu_filter" onclick="toggleFilter();">Filter</button>
+</div>
+<div id="overlay-filter">
+    <ul class="list-group">
+        <li class="list-group-item">
+            <label>Netztyp:</label>
+            <select class="form-control">
+                <option>Alle</option>
+                <option>EDGE</option>
+                <option>GPRS</option>
+                <option>3G</option>
+                <option>HSDPA</option>
+            </select>
+        </li>
     </ul>
 </div>
 <div id="dropzone" style="width:100%; height:100%; background-color: black;">
