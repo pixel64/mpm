@@ -14,6 +14,9 @@ var handleDrop = function(e){
   for (var i = 0, f; f = files[i]; i++) {
     //parseFile(f);
   }
+}
+var performFilter = function(){
+  alert($id('select-network').getPropertyValue("value"));
 }/**
  * general.js
  * Verantwortlich für alles allgemeine

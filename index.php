@@ -34,13 +34,16 @@ file_put_contents("general.js",$jsfile);
     <ul class="list-group">
         <li class="list-group-item">
             <label>Netztyp:</label>
-            <select class="form-control">
+            <select class="form-control" id="select_network">
                 <option>Alle</option>
                 <option>EDGE</option>
                 <option>GPRS</option>
                 <option>3G</option>
                 <option>HSDPA</option>
             </select>
+        </li>
+        <li class="list-group-item">
+            <button class="btn btn-default" onclick="toggleFilter();performFilter();">Filtern</button>
         </li>
     </ul>
 </div>
