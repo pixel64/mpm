@@ -48,7 +48,7 @@ file_put_contents("general.js",$jsfile);
     </ul>
 </div>
 <div id="dropzone" style="width:100%; height:100%; background-color: black;">
-
+//Test
 </div>
 <div id="message"></div>
 </body>
