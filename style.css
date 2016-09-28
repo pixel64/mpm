@@ -8,13 +8,14 @@ html, body {
     height: 100%;
     z-index: 1;
     position: absolute;
+    background-color: black;
 }
 #menue-button{
     width: 10px;
     height: 10px;
     z-index: 4;
     top: 10px;
-    left: 20px;
+    left: 50px;
     position: absolute;
 }
 #overlay-menue{
@@ -32,7 +33,7 @@ html, body {
     z-index: 7;
     top: 10px;
     position: absolute;
-    right: 20px
+    right: 50px
 
 }
 #filter-button button{

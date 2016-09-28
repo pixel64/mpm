@@ -1,9 +1,19 @@
 /**
+ * init.js
+ * Verantwortlich für die initialisierung aller Komponenten
+ */
+
+var filesAsArray = {};
+var InitDragAndDrop = function(){
+  document.body.addEventListener("dragover", handleDragOver, false);
+  document.body.addEventListener("drop", handleDrop, false);
+
+}
+/**
  * eventHandler.js
  * Hier können vorher registrierte events programmiert werden
  */
 var worker = null;
-
 var handleDragOver = function(e){
   e.stopPropagation();
   e.preventDefault();
@@ -13,15 +23,16 @@ var handleDrop = function(e){
   e.preventDefault();
   var jsonresult;
     if(worker == null)  worker = new Worker('worker.js');
-  worker.onmessage = function(event){
+    worker.onmessage = function(event){
     var result = event.data;
-      customAlert(result, 0);
+      var tmpArray = JSON.parse(result);
+      filesAsArray[objectLength(filesAsArray)]=tmpArray;
   }
   var files = e.target.files || e.dataTransfer.files;
-    worker.postMessage({'files':files});
+  worker.postMessage({'files':files});
 }
 var performFilter = function(){
-  alert($id('select-network').getPropertyValue("value"));
+
 }/**
  * general.js
  * Verantwortlich für alles allgemeine
@@ -29,15 +40,16 @@ var performFilter = function(){
 var $id = function(id){
     return document.getElementById(id);
 }
-/**
- * init.js
- * Verantwortlich für die initialisierung aller Komponenten
- */
-var InitDragAndDrop = function(){
-  $id("map").addEventListener("dragover", handleDragOver, false);
-  $id("map").addEventListener("drop", handleDrop, false);
-}
-/**
+function objectLength(obj) {
+    var result = 0;
+    for(var prop in obj) {
+        if (obj.hasOwnProperty(prop)) {
+            // or Object.prototype.hasOwnProperty.call(obj, prop)
+            result++;
+        }
+    }
+    return result;
+}/**
  * menue.js
  * verantwortlich für das Menü
  */
@@ -155,4 +167,44 @@ function getCycleTileURL(bounds) {
 
         return this.url + z + "/" + x + "/" + y + "." + this.type;
     }
+}/**
+ * Handling of open Streetmap
+ */
+var map;
+var layer_mapnik;
+var layer_tah;
+var layer_markers;
+
+function drawmap() {
+    OpenLayers.Lang.setCode('de');
+
+    // Startposition und Zoomstufe der Karte
+    var lon = 8.7321;
+    var lat = 50.3398;
+    var zoom = 10;
+
+    map = new OpenLayers.Map('map', {
+        projection: new OpenLayers.Projection("EPSG:900913"),
+        displayProjection: new OpenLayers.Projection("EPSG:4326"),
+        controls: [
+            new OpenLayers.Control.Navigation(),
+            new OpenLayers.Control.LayerSwitcher(),
+            new OpenLayers.Control.PanZoomBar()],
+        maxExtent:
+            new OpenLayers.Bounds(-20037508.34,-20037508.34,
+                20037508.34, 20037508.34),
+        numZoomLevels: 18,
+        maxResolution: 156543,
+        units: 'meters'
+    });
+
+    layer_zuege = new OpenLayers.Layer.OSM.TransportMap("Bahnkarte");
+    layer_markers = new OpenLayers.Layer.Markers("Address", { projection: new OpenLayers.Projection("EPSG:4326"),
+        visibility: true, displayInLayerSwitcher: false });
+
+    map.addLayers([layer_zuege, layer_markers]);
+    jumpTo(lon, lat, zoom);
+
+    // Position des Markers
+    addMarker(layer_markers, 6.641389, 49.756667, popuptext);
 }
