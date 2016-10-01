@@ -32,7 +32,7 @@ getFile = function(file){
                     tmpArray["value_3"] = split[5];
                     tmpArray["id"] = split[6];
                     tmpArray["datetime"] = split[7];
-                    retArray["obj"+deep]["network"+network] = tmpArray;
+                    retArray[deep]["network"+network] = tmpArray;
                     network++;
                 }else if(split[0] === "bandwidth"){
                     var tmpArray = {};
@@ -42,14 +42,14 @@ getFile = function(file){
                     tmpArray["value_2"] = split[4];
                     tmpArray["value_3"] = split[5];
                     tmpArray["end_datetime"] = split[6];
-                    retArray["obj"+deep]["bandwidth"] = tmpArray;
+                    retArray[deep]["bandwidth"] = tmpArray;
                 }else if(split[0] === "battery"){
                     var tmpArray = {};
                     tmpArray["value_1"] = split[1];
                     tmpArray["value_2"] = split[2];
                     tmpArray["id"] = split[3];
                     tmpArray["datetime"] = split[4];
-                    retArray["obj"+deep]["battery"] = tmpArray;
+                    retArray[deep]["battery"] = tmpArray;
                 }
             }
             var stringObj = JSON.stringify(retArray);

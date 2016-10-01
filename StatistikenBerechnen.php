@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<?php_egg_logo_guid
+<?php
 
 $jsonfile = file_get_contents('.../JsonBeispiel.json');
 $jsonarray = json_decode($jsonfile);

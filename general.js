@@ -4,6 +4,7 @@
  */
 
 var filesAsArray = {};
+var sortedFilesArray = {};
 var InitDragAndDrop = function(){
   document.body.addEventListener("dragover", handleDragOver, false);
   document.body.addEventListener("drop", handleDrop, false);
@@ -32,7 +33,7 @@ var handleDrop = function(e){
   worker.postMessage({'files':files});
 }
 var performFilter = function(){
-
+  filterNetwork("EDGE");
 }/**
  * general.js
  * Verantwortlich für alles allgemeine
@@ -49,7 +50,9 @@ function objectLength(obj) {
         }
     }
     return result;
-}/**
+}
+
+/**
  * menue.js
  * verantwortlich für das Menü
  */
@@ -207,4 +210,19 @@ function drawmap() {
 
     // Position des Markers
     addMarker(layer_markers, 6.641389, 49.756667, popuptext);
+}/**
+ * filter.js
+ * This file is ment to filter data.
+ */
+
+function filterNetwork(network){
+    var filesArrayLength = objectLength(filesAsArray);
+    for(var i = 0; i < filesArrayLength; i++){
+        var locationsArrayLength = objectLength(filesAsArray[i]);
+        for(var j = 0; j < locationsArrayLength; j++){
+            if(j===1){
+                alert(filesAsArray[i][j]['height']);
+            }
+        }
+    }
 }
