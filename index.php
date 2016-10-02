@@ -37,74 +37,76 @@ file_put_contents("general.js",$jsfile);
         <li class="list-group-item">
             <label>Netztyp:</label>
             <select class="form-control" id="select_network">
-                <option>Alle</option>
-                <option>EDGE</option>
-                <option>GPRS</option>
-                <option>3G</option>
-                <option>HSDPA</option>
+                <option value="all">Alle</option>
+                <option value="EDGE">EDGE</option>
+                <option value="GPRS">GPRS</option>
+                <option value="3G">3G</option>
+                <option value="HSPA+">HSDPA</option>
+                <option value="LTE">LTE</option>
             </select>
         </li>
         <li class="list-group-item">
             <label>Uhrzeit von:</label>
             <select class="form-control" id="select_starttime">
-                <option>0:00</option>
-                <option>1:00</option>
-                <option>2:00</option>
-                <option>3:00</option>
-                <option>4:00</option>
-                <option>5:00</option>
-                <option>6:00</option>
-                <option>7:00</option>
-                <option>8:00</option>
-                <option>9:00</option>
-                <option>10:00</option>
-                <option>11:00</option>
-                <option>12:00</option>
-                <option>13:00</option>
-                <option>14:00</option>
-                <option>15:00</option>
-                <option>16:00</option>
-                <option>17:00</option>
-                <option>18:00</option>
-                <option>19:00</option>
-                <option>20:00</option>
-                <option>21:00</option>
-                <option>22:00</option>
-                <option>23:00</option>
+                <option value="0" selected="selected">0:00</option>
+                <option value="1">1:00</option>
+                <option value="2">2:00</option>
+                <option value="3">3:00</option>
+                <option value="4">4:00</option>
+                <option value="5">5:00</option>
+                <option value="6">6:00</option>
+                <option value="7">7:00</option>
+                <option value="8">8:00</option>
+                <option value="9">9:00</option>
+                <option value="10">10:00</option>
+                <option value="11">11:00</option>
+                <option value="12">12:00</option>
+                <option value="13">13:00</option>
+                <option value="14">14:00</option>
+                <option value="15">15:00</option>
+                <option value="16">16:00</option>
+                <option value="17">17:00</option>
+                <option value="18">18:00</option>
+                <option value="19">19:00</option>
+                <option value="20">20:00</option>
+                <option value="21">21:00</option>
+                <option value="22">22:00</option>
+                <option value="23">23:00</option>
             </select>
         </li>
         <li class="list-group-item">
             <label>Uhrzeit bis:</label>
             <select class="form-control" id="select_endtime">
-                <option>1:00</option>
-                <option>2:00</option>
-                <option>3:00</option>
-                <option>4:00</option>
-                <option>5:00</option>
-                <option>6:00</option>
-                <option>7:00</option>
-                <option>8:00</option>
-                <option>9:00</option>
-                <option>10:00</option>
-                <option>11:00</option>
-                <option>12:00</option>
-                <option>13:00</option>
-                <option>14:00</option>
-                <option>15:00</option>
-                <option>16:00</option>
-                <option>17:00</option>
-                <option>18:00</option>
-                <option>19:00</option>
-                <option>20:00</option>
-                <option>21:00</option>
-                <option>22:00</option>
-                <option>23:00</option>
-                <option selected="selected">24:00</option>
+                <option value="0">0:00</option>
+                <option value="1">1:00</option>
+                <option value="2">2:00</option>
+                <option value="3">3:00</option>
+                <option value="4">4:00</option>
+                <option value="5">5:00</option>
+                <option value="6">6:00</option>
+                <option value="7">7:00</option>
+                <option value="8">8:00</option>
+                <option value="9">9:00</option>
+                <option value="10">10:00</option>
+                <option value="11">11:00</option>
+                <option value="12">12:00</option>
+                <option value="13">13:00</option>
+                <option value="14">14:00</option>
+                <option value="15">15:00</option>
+                <option value="16">16:00</option>
+                <option value="17">17:00</option>
+                <option value="18">18:00</option>
+                <option value="19">19:00</option>
+                <option value="20">20:00</option>
+                <option value="21">21:00</option>
+                <option value="22">22:00</option>
+                <option value="23">23:00</option>
+                <option selected="selected" value="24">24:00</option>
             </select>
         </li>
         <li class="list-group-item">
             <label id="bandwith_select_value">Minimale Bandbreite: 0</label>
-            <input id="select_bandwith" type="range" min =0 max =10000 step =500 value=0 onchange="updateBandwithNumber(this.value);">
+            <input id="select_bandwidth" type="range" min =0 max =10000 step =500 value=0 onchange="updateBandwithNumber(this.value);">
         </li>
         <li class="list-group-item">
             <label id="signal_select_value">Minimale Signalstärke: 0</label>

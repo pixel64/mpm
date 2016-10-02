@@ -21,7 +21,6 @@ var handleDragOver = function(e){
 var handleDrop = function(e){
   e.stopPropagation();
   e.preventDefault();
-  var jsonresult;
     if(worker == null)  worker = new Worker('worker.js');
     worker.onmessage = function(event){
     var result = event.data;
@@ -33,9 +32,19 @@ var handleDrop = function(e){
   worker.postMessage({'files':files});
 }
 var performFilter = function(){
-  filterNetwork("EDGE");
-  filterDaytime(1,2);
-  alert("filter");
+  var network = $id("select_network");
+  filterNetwork(network.options[network.selectedIndex].value);
+  var startTimeSelect = $id("select_starttime");
+  var valueStartTime = Math.floor(startTimeSelect.options[startTimeSelect.selectedIndex].value);
+  var endTimeSelect = $id("select_endtime");
+  var valueEndTime = Math.floor(endTimeSelect.options[endTimeSelect.selectedIndex].value);
+  filterDaytime(valueStartTime,valueEndTime);
+  if($id("select_bandwidth").value > 0){
+    filterBandwidth($id("select_bandwidth"));
+  }
+  if($id("select_signal").value > 0){
+    filterSignal($id("select_signal").value);
+  }
 }/**
  * general.js
  * Verantwortlich für alles allgemeine
@@ -86,11 +95,9 @@ var toggleFilter = function () {
 }
 
 var updateSignalNumber = function(value) {
-    customAlert(value);
     $id("signal_select_value").innerHTML = "Minimale Signalstärke: "+value;
 }
 var updateBandwithNumber = function(value) {
-    customAlert(value);
     $id("bandwith_select_value").innerHTML = "Minimale Bandbreite: "+value;
 }/**
  * message.js
@@ -265,7 +272,7 @@ function removeLayers() {
 
 /**
  * filter.js
- * This file is ment to filter data.
+ * Hier wird das Filter handling durchgeführt
  */
 var initFilesForFilter = function(){
     filterNetwork("all");
@@ -275,16 +282,21 @@ var filterNetwork = function(network){
     sortedFilesArray = [];
     if(network === "all"){
         for(var i = 0; i < filesArrayLength; i++){
-            sortedFilesArray.push(filesAsArray[i]);
+            var valuesArray = filesAsArray[i];
+            var valuesArrayLength = objectLength(valuesArray);
+            for (var j = 0; j < valuesArrayLength; j++) {
+                sortedFilesArray.push(valuesArray[j]);
+            }
         }
     }else {
         for (var i = 0; i < filesArrayLength; i++) {
             var valuesArray = filesAsArray[i];
             var valuesArrayLength = objectLength(valuesArray);
-            for (var j = 0; j < valuesArrayLength; j++)
+            for (var j = 0; j < valuesArrayLength; j++) {
                 if (valuesArray[j]["networks"][0]["subtype"] === network) {
                     sortedFilesArray.push(valuesArray[j]);
                 }
+            }
         }
     }
 }
@@ -318,7 +330,7 @@ var filterDaytime = function(from,to){
         var date = new Date(sortedFilesArray[i]["startLocation"]["datetime_unix"] * 1000);
         var starttime = date.getHours();
         if(starttime >= from && starttime <= to) {
-            alert(starttime);
+            tmpSortedArray.push(sortedFilesArray[i]);
         }
     }
     sortedFilesArray = tmpSortedArray;
