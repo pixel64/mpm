@@ -4,11 +4,10 @@
  */
 
 var filesAsArray = {};
-var sortedFilesArray = {};
+var sortedFilesArray = [];
 var InitDragAndDrop = function(){
   document.body.addEventListener("dragover", handleDragOver, false);
   document.body.addEventListener("drop", handleDrop, false);
-
 }
 /**
  * eventHandler.js
@@ -28,12 +27,15 @@ var handleDrop = function(e){
     var result = event.data;
       var tmpArray = JSON.parse(result);
       filesAsArray[objectLength(filesAsArray)]=tmpArray;
+      performFilter();
   }
   var files = e.target.files || e.dataTransfer.files;
   worker.postMessage({'files':files});
 }
 var performFilter = function(){
   filterNetwork("EDGE");
+  filterDaytime(1,2);
+  alert("filter");
 }/**
  * general.js
  * Verantwortlich für alles allgemeine
@@ -223,16 +225,59 @@ function drawmap() {
  * filter.js
  * This file is ment to filter data.
  */
-
-function filterNetwork(network){
+var initFilesForFilter = function(){
+    filterNetwork("all");
+}
+var filterNetwork = function(network){
     var filesArrayLength = objectLength(filesAsArray);
-    for(var i = 0; i < filesArrayLength; i++){
-        var locationsAsArray = filesAsArray[i];
-        var locationsArrayLength = objectLength(locationsasArray);
-        for(var j = 0; j < locationsArrayLength; j++){
-            if(locationsAsArray[j]["entry"] === "network"){
-                alert(locationsAsArray[j]["entry"])
-            }
+    sortedFilesArray = [];
+    if(network === "all"){
+        for(var i = 0; i < filesArrayLength; i++){
+            sortedFilesArray.push(filesAsArray[i]);
+        }
+    }else {
+        for (var i = 0; i < filesArrayLength; i++) {
+            var valuesArray = filesAsArray[i];
+            var valuesArrayLength = objectLength(valuesArray);
+            for (var j = 0; j < valuesArrayLength; j++)
+                if (valuesArray[j]["networks"][0]["subtype"] === network) {
+                    sortedFilesArray.push(valuesArray[j]);
+                }
         }
     }
+}
+
+var filterBandwidth = function(bandwidth){
+    var valuesArrayLength = objectLength(sortedFilesArray);
+    var tmpSortedArray = [];
+    for (var i = 0; i < valuesArrayLength; i++) {
+        if (sortedFilesArray[i]["bandwidth"]["value"] >= bandwidth) {
+            tmpSortedArray.push(sortedFilesArray[i]);
+        }
+    }
+    sortedFilesArray = tmpSortedArray;
+}
+
+var filterSignal = function(signal){
+    var valuesArrayLength = objectLength(sortedFilesArray);
+    var tmpSortedArray = [];
+    for (var i = 0; i < valuesArrayLength; i++) {
+        if (sortedFilesArray[i]["signal"] >= signal) {
+            tmpSortedArray.push(sortedFilesArray[i]);
+        }
+    }
+    sortedFilesArray = tmpSortedArray;
+}
+
+var filterDaytime = function(from,to){
+    var valuesArrayLength = objectLength(sortedFilesArray);
+    var tmpSortedArray = [];
+    for (var i = 0; i < valuesArrayLength; i++) {
+        var date = new Date(sortedFilesArray[i]["startLocation"]["datetime_unix"] * 1000);
+        var starttime = date.getHours();
+        if(starttime >= from && starttime <= to) {
+            alert(starttime);
+        }
+    }
+    sortedFilesArray = tmpSortedArray;
 }

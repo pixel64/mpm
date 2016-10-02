@@ -30,14 +30,6 @@ onmessage = function(event){
     }
 }
 
-var parseLine = function(line){
-    var ret = "";
-    var res = line.split(";");
-    if(res[0] === "version"){
-
-    }
-}
-
 var parseArray = function(arr){
     var iteration  = 0;
     var index = 0;
@@ -45,6 +37,7 @@ var parseArray = function(arr){
     var tmpNetworks = {};
     var retArray = {};
     var tmpArray = {};
+    var tmpSignal = 0;
     for(var i = 0; i < arr.length; i++){
         var line = arr[i].split(";");
         if(line[0] === "location"){
@@ -52,6 +45,7 @@ var parseArray = function(arr){
             if(iteration === 0){
                 loc = "startLocation";
                 iteration = 1;
+                tmpArray["signal"] = 0;
             }else{
                 loc = "endLocation";
                 iteration = 0;
@@ -62,7 +56,6 @@ var parseArray = function(arr){
             tmpArray[loc]["accuracy"] = line[3];
             tmpArray[loc]["datetime_unix"] = line[4];
             tmpArray[loc]["datetime_human"] = line[5];
-            networks = 0;
         }else if(line[0] === "networks"){
             tmpNetworks[networks] = {};
             tmpNetworks[networks]["type"] = line[1];
@@ -72,9 +65,12 @@ var parseArray = function(arr){
             tmpNetworks[networks]["errorRate"] = line[5];
             tmpNetworks[networks]["datetime_unix"] = line[6];
             tmpNetworks[networks]["datetime_unix"] = line[7];
+            tmpArray["signal"] += Math.floor(tmpNetworks[networks]["signalStrength"]);
             networks++;
         }else if(line[0] === "bandwidth"){
             tmpArray["networks"] = tmpNetworks;
+            tmpArray["signal"] = tmpArray["signal"]/networks;
+            networks = 0;
             tmpArray["bandwidth"] = {};
             tmpArray["bandwidth"]["datetimeStart_unix"] = line[1];
             tmpArray["bandwidth"]["datetimeStart_human"] = line[2];
@@ -82,6 +78,7 @@ var parseArray = function(arr){
             tmpArray["bandwidth"]["file_size_extrapolated"] = line[4];
             tmpArray["bandwidth"]["datetimeEnd_unix"] = line[5];
             tmpArray["bandwidth"]["datetimeEnd_human"] = line[6];
+            tmpArray["bandwidth"]["value"] = calcBandwidth(tmpArray["bandwidth"]["file_size_extrapolated"]);
         }else if(line[0] === "battery"){
             tmpArray["battery"] = {};
             tmpArray["battery"]["mAh"] = line[1];
@@ -94,6 +91,10 @@ var parseArray = function(arr){
         }
     }
     return retArray;
+}
+
+var calcBandwidth = function(size){
+    return size/10;
 }
 
 /*for(var line = 0; line < lines.length; line++){
