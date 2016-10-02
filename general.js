@@ -81,6 +81,15 @@ var toggleFilter = function () {
         $id("bu_filter").innerHTML = ">>";
         $id("overlay-filter").style.display = 'block';
     }
+}
+
+var updateSignalNumber = function(value) {
+    customAlert(value);
+    $id("signal_select_value").innerHTML = "Minimale Signalstärke: "+value;
+}
+var updateBandwithNumber = function(value) {
+    customAlert(value);
+    $id("bandwith_select_value").innerHTML = "Minimale Bandbreite: "+value;
 }/**
  * message.js
  * Verantwortlich für custom alerts
@@ -218,10 +227,11 @@ function drawmap() {
 function filterNetwork(network){
     var filesArrayLength = objectLength(filesAsArray);
     for(var i = 0; i < filesArrayLength; i++){
-        var locationsArrayLength = objectLength(filesAsArray[i]);
+        var locationsAsArray = filesAsArray[i];
+        var locationsArrayLength = objectLength(locationsasArray);
         for(var j = 0; j < locationsArrayLength; j++){
-            if(j===1){
-                alert(filesAsArray[i][j]['height']);
+            if(locationsAsArray[j]["entry"] === "network"){
+                alert(locationsAsArray[j]["entry"])
             }
         }
     }

@@ -45,6 +45,72 @@ file_put_contents("general.js",$jsfile);
             </select>
         </li>
         <li class="list-group-item">
+            <label>Uhrzeit von:</label>
+            <select class="form-control" id="select_starttime">
+                <option>0:00</option>
+                <option>1:00</option>
+                <option>2:00</option>
+                <option>3:00</option>
+                <option>4:00</option>
+                <option>5:00</option>
+                <option>6:00</option>
+                <option>7:00</option>
+                <option>8:00</option>
+                <option>9:00</option>
+                <option>10:00</option>
+                <option>11:00</option>
+                <option>12:00</option>
+                <option>13:00</option>
+                <option>14:00</option>
+                <option>15:00</option>
+                <option>16:00</option>
+                <option>17:00</option>
+                <option>18:00</option>
+                <option>19:00</option>
+                <option>20:00</option>
+                <option>21:00</option>
+                <option>22:00</option>
+                <option>23:00</option>
+            </select>
+        </li>
+        <li class="list-group-item">
+            <label>Uhrzeit bis:</label>
+            <select class="form-control" id="select_endtime">
+                <option>1:00</option>
+                <option>2:00</option>
+                <option>3:00</option>
+                <option>4:00</option>
+                <option>5:00</option>
+                <option>6:00</option>
+                <option>7:00</option>
+                <option>8:00</option>
+                <option>9:00</option>
+                <option>10:00</option>
+                <option>11:00</option>
+                <option>12:00</option>
+                <option>13:00</option>
+                <option>14:00</option>
+                <option>15:00</option>
+                <option>16:00</option>
+                <option>17:00</option>
+                <option>18:00</option>
+                <option>19:00</option>
+                <option>20:00</option>
+                <option>21:00</option>
+                <option>22:00</option>
+                <option>23:00</option>
+                <option selected="selected">24:00</option>
+            </select>
+        </li>
+        <li class="list-group-item">
+            <label id="bandwith_select_value">Minimale Bandbreite: 0</label>
+            <input id="select_bandwith" type="range" min =0 max =10000 step =500 value=0 onchange="updateBandwithNumber(this.value);">
+        </li>
+        <li class="list-group-item">
+            <label id="signal_select_value">Minimale Signalstärke: 0</label>
+            <input id="select_signal" type="range" min =0 max =20 step =1 value=0 onchange="updateSignalNumber(this.value);">
+        </li>
+        <li class="list-group-item">
             <button class="btn btn-default" onclick="toggleFilter();performFilter();">Filtern</button>
         </li>
     </ul>
