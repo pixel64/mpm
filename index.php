@@ -1,5 +1,5 @@
 <?php
-$files = array("init.js","locate.js","eventHandler.js","general.js","menue.js","messages.js","tom.js","worker.js","open_streetmap.js","filter.js");
+$files = array("init.js","locate.js","eventHandler.js","general.js","menue.js","messages.js","tom.js","worker.js","open_streetmap.js","filter.js","diagrams.js");
 $jsfile = "";
 foreach($files as $file){
     if(file_exists("lib/".$file)){
