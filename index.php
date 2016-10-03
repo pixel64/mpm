@@ -24,6 +24,14 @@ file_put_contents("general.js",$jsfile);
 </div>
 <div id="overlay-menue">
     <ul class="list-group">
+        <a href="javascript:showStatistics()"><li class="list-group-item">
+            Statistiken
+        </li>
+        </a>
+        <a href="javascript:showDiagram()"><li class="list-group-item">
+                Diagramme
+            </li>
+        </a>
         <li class="list-group-item">
             <form>
             <p>Auswahl der Anzeige auf der Karte</p>
@@ -126,9 +134,23 @@ file_put_contents("general.js",$jsfile);
 
 </div>
 <div id="overlay-block">
-    <div class="overlay-layer"></div>
+    <div class="overlay-layer block-all"></div>
     <div class="alert alert-info overlay-message" role="alert">
         <strong>BITTE WARTEN</strong> Es werden daten verarbeitet.
+    </div>
+</div>
+<div id="overlay-statistics">
+    <div class="overlay-layer block-map"></div>
+    <div class="statistics-form">
+        <div id="statistics">Statistiken</div>
+        <button onclick="closeStatistics()" class="btn btn-default">Schließen</button>
+    </div>
+</div>
+<div id="overlay-diagram">
+    <div class="overlay-layer block-map"></div>
+    <div class="diagram-form">
+        <div id="diagram">Diagramme</div>
+        <button onclick="closeDiagram()" class="btn btn-default">Schließen</button>
     </div>
 </div>
 <div id="message"></div>

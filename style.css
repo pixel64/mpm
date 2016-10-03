@@ -13,7 +13,7 @@ html, body {
 #menue-button{
     width: 10px;
     height: 10px;
-    z-index: 4;
+    z-index: 6;
     top: 10px;
     left: 50px;
     position: absolute;
@@ -24,7 +24,7 @@ html, body {
     heigt: 100%;
     bottom: 0px;
     top: 0px;
-    z-index: 3;
+    z-index: 5;
     position: absolute;
     background-color: white;
     display: none;
@@ -55,7 +55,7 @@ html, body {
     top:70px;
     left:200px;
     right: 200px;
-    z-index: 5;
+    z-index: 6;
     position: absolute;
 }
 .overlay-message button{
@@ -67,10 +67,40 @@ html, body {
     right: 0;
     top: 0;
     bottom: 0;
-    z-index: 10;
     opacity: 0.5;
     background-color: black;
 }
 #overlay-block{
     display: none;
+}
+
+.block-all{
+    z-index: 10;
+}
+.block-map{
+    z-index: 3;
+}
+#overlay-statistics{
+    display: none;
+}
+.statistics-form{
+    z-index: 11;
+    position: absolute;
+    top: 0px;
+    left: 400px;
+    right: 400px;
+    background-color: white;
+    padding: 20px;
+}
+#overlay-diagram{
+    display: none;
+}
+.diagram-form{
+    z-index: 11;
+    position: absolute;
+    top: 0px;
+    left: 400px;
+    right: 400px;
+    background-color: white;
+    padding: 20px;
 }
