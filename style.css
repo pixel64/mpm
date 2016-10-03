@@ -104,3 +104,7 @@ html, body {
     background-color: white;
     padding: 20px;
 }
+.ct-chart{
+    width:400px;
+    height:300px;
+}

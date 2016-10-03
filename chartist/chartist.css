@@ -152,20 +152,20 @@
 
 .ct-bar {
   fill: none;
-  stroke-width: 10px; }
+  stroke-width: 100px; }
 
 .ct-slice-donut {
   fill: none;
   stroke-width: 60px; }
 
 .ct-series-a .ct-point, .ct-series-a .ct-line, .ct-series-a .ct-bar, .ct-series-a .ct-slice-donut {
-  stroke: #d70206; }
+  stroke: brown; }
 
 .ct-series-a .ct-slice-pie, .ct-series-a .ct-area {
   fill: #d70206; }
 
 .ct-series-b .ct-point, .ct-series-b .ct-line, .ct-series-b .ct-bar, .ct-series-b .ct-slice-donut {
-  stroke: #f05b4f; }
+  stroke: red; }
 
 .ct-series-b .ct-slice-pie, .ct-series-b .ct-area {
   fill: #f05b4f; }

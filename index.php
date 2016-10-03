@@ -151,8 +151,13 @@ file_put_contents("general.js",$jsfile);
 <div id="overlay-diagram">
     <div class="overlay-layer block-map"></div>
     <div class="diagram-form">
-        <div id="diagram">Diagramme:</div>
-        <div class="ct-chart ct-golden-section"></div>
+        <div id="diagram">Diagramme</div>
+        <div>
+            <div>Durchschnittliche Bandbreiten</div>
+            <div class="ct-chart ct-golden-section" id="chart1"></div>
+            <div>Durchschnittliche Signalstärken</div>
+            <div class="ct-chart ct-golden-section" id="chart2"></div>
+        </div>
         <button onclick="closeDiagram()" class="btn btn-default">Schließen</button>
     </div>
 </div>
