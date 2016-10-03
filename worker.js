@@ -17,7 +17,7 @@ getFile = function(file){
         reader.readAsText(file);
 
     }else{
-        jsons = "File not a text file";
+        postMessage({error:"File not a text file"});
     }
 }
 

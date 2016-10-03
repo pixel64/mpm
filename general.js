@@ -69,13 +69,19 @@ var handleDrop = function(e){
     if(worker == null)  worker = new Worker('worker.js');
     $id("overlay-block").style.display = "block";
     worker.onmessage = function(event){
+        $id("overlay-block").style.display = "none";
     var result = event.data;
-      var tmpArray = JSON.parse(result);
-      filesAsArray[objectLength(filesAsArray)]=tmpArray;
-      performFilter();
-      $id("overlay-block").style.display = "none";
-      customAlert("Daten eingelesen");
-      setMapToCenter();
+        if(result.hasOwnProperty("error")){
+            customAlert(result.error,1);
+        }
+        else {
+            var tmpArray = JSON.parse(result);
+            filesAsArray[objectLength(filesAsArray)] = tmpArray;
+            performFilter();
+            $id("overlay-block").style.display = "none";
+            customAlert("Daten eingelesen");
+            setMapToCenter();
+        }
     }
   var files = e.target.files || e.dataTransfer.files;
   worker.postMessage({'files':files});
