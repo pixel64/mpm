@@ -157,7 +157,7 @@ var drawdataonmap = function (type) {
         addCircle(sortedFilesArray[i]["startLocation"]["y"], sortedFilesArray[i]["startLocation"]["x"], Math.floor(sortedFilesArray[i]["bandwidth"]["value"]), color);
       }
       else if (type == 'signal') {
-        addCircle(sortedFilesArray[i]["startLocation"]["y"], sortedFilesArray[i]["startLocation"]["x"], Math.floor(sortedFilesArray[i]["signal"] * 40), color);
+        addCircle(sortedFilesArray[i]["startLocation"]["y"], sortedFilesArray[i]["startLocation"]["x"], Math.floor((sortedFilesArray[i]["signal"]+3) * 40), color);
       }
     }
   }
