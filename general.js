@@ -8,7 +8,7 @@ var sortedFilesArray = [];
 var InitDragAndDrop = function(){
   document.body.addEventListener("dragover", handleDragOver, false);
   document.body.addEventListener("drop", handleDrop, false);
-}
+};
 function locate() {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(getPosition,showError);
