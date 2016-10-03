@@ -1,4 +1,4 @@
-/**
+ /**
  * init.js
  * Verantwortlich für die initialisierung aller Komponenten
  */
