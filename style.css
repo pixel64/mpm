@@ -61,3 +61,16 @@ html, body {
 .overlay-message button{
     float: right;
 }
+.overlay-layer{
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    z-index: 10;
+    opacity: 0.5;
+    background-color: black;
+}
+#overlay-block{
+    display: none;
+}

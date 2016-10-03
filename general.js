@@ -1,4 +1,4 @@
- /**
+/**
  * init.js
  * Verantwortlich für die initialisierung aller Komponenten
  */
@@ -8,8 +8,7 @@ var sortedFilesArray = [];
 var InitDragAndDrop = function(){
   document.body.addEventListener("dragover", handleDragOver, false);
   document.body.addEventListener("drop", handleDrop, false);
-};
-function locate() {
+};function locate() {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(getPosition,showError);
     }
@@ -37,16 +36,16 @@ function showError(error) {
     drawmap();
     switch(error.code) {
         case error.PERMISSION_DENIED:
-            alert("Nutzer hat den Zugriff auf die Position abgelehnt.")
+            customAlert("Nutzer hat den Zugriff auf die Position abgelehnt.",1)
             break;
         case error.POSITION_UNAVAILABLE:
-            alert("Keine Information zum Standort verfügbar.")
+            customAlert("Keine Information zum Standort verfügbar.",1)
             break;
         case error.TIMEOUT:
-            alert("Die Anfrage der Standortbestimmung hat zu lange gedauert.")
+            customAlert("Die Anfrage der Standortbestimmung hat zu lange gedauert.",1)
             break;
         case error.UNKNOWN_ERROR:
-            alert("Bei der Standortbestimmung ist ein unbekannter Fehler aufgetreten..")
+            customAlert("Bei der Standortbestimmung ist ein unbekannter Fehler aufgetreten..",1)
             break;
     }
 }/**
@@ -62,28 +61,38 @@ var handleDrop = function(e){
   e.stopPropagation();
   e.preventDefault();
     if(worker == null)  worker = new Worker('worker.js');
+    $id("overlay-block").style.display = "block";
     worker.onmessage = function(event){
     var result = event.data;
       var tmpArray = JSON.parse(result);
       filesAsArray[objectLength(filesAsArray)]=tmpArray;
       performFilter();
+      $id("overlay-block").style.display = "none";
+      customAlert("Daten eingelesen");
   }
   var files = e.target.files || e.dataTransfer.files;
   worker.postMessage({'files':files});
 }
 var performFilter = function(){
+  var error = "";
   var network = $id("select_network");
-  filterNetwork(network.options[network.selectedIndex].value);
   var startTimeSelect = $id("select_starttime");
   var valueStartTime = Math.floor(startTimeSelect.options[startTimeSelect.selectedIndex].value);
   var endTimeSelect = $id("select_endtime");
   var valueEndTime = Math.floor(endTimeSelect.options[endTimeSelect.selectedIndex].value);
-  filterDaytime(valueStartTime,valueEndTime);
-  if($id("select_bandwidth").value > 0){
-    filterBandwidth($id("select_bandwidth").value);
+  if(valueStartTime > valueEndTime){
+    error = true;
+    customAlert("Die Start Zeit liegt über der End Zeit",1);
   }
-  if($id("select_signal").value > 0){
-    filterSignal($id("select_signal").value);
+  if(!error){
+    filterNetwork(network.options[network.selectedIndex].value);
+    filterDaytime(valueStartTime,valueEndTime);
+    if($id("select_bandwidth").value > 0){
+      filterBandwidth($id("select_bandwidth").value);
+    }
+    if($id("select_signal").value > 0){
+      filterSignal($id("select_signal").value);
+    }
   }
 }/**
  * general.js
