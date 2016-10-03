@@ -6,6 +6,7 @@
 var displaytype = "bandwidth";
 var filesAsArray = {};
 var sortedFilesArray = [];
+var sortedFilesMapArray = [];
 var InitDragAndDrop = function(){
   document.body.addEventListener("dragover", handleDragOver, false);
   document.body.addEventListener("drop", handleDrop, false);
@@ -119,6 +120,7 @@ var performFilter = function(){
       filterSignal($id("select_signal").value);
     }
   }
+  filterMapLocation();
   drawdataonmap(displaytype);
 }
 
@@ -485,9 +487,24 @@ var filterDaytime = function(from,to){
         }
     }
     sortedFilesArray = tmpSortedArray;
+}
+
+var filterMapLocation = function(){
+    var valuesArrayLength = objectLength(sortedFilesArray);
+    var tmpSortedArray = [];
+    for (var i = 0; i < valuesArrayLength; i++) {
+        var bounds = map.getExtent();
+        var x = Lon2Merc(parseFloat(sortedFilesArray[i]['startLocation']['x']));
+        var y = Lat2Merc(parseFloat(sortedFilesArray[i]['startLocation']['y']));
+        if(x > bounds.left && x < bounds.right && y > bounds.bottom && y < bounds.top) {
+            tmpSortedArray.push(sortedFilesArray[i]);
+        }
+    }
+    sortedFilesMapArray = tmpSortedArray;
 }/*
 *diagrams.js
  */
+var totalcount;
 var highestbandwidth;
 var lowestbandwidth;
 var highestsignalstrength;
@@ -522,7 +539,7 @@ var calculateStatistics = function(){
         unknowncount=0;
         averagebandwidth=0;
         averagesignalstrength=0;
-        var totalcount=0;
+        var totalcount = 0;
         var totalbandwidth=0;
         var totalsignalstrength=0;
         var totaledge= 0;
@@ -582,17 +599,20 @@ var calculateStatistics = function(){
 
 var drawStatistics= function(){
     if(sortedFilesArray.length>0) {
-        var text=['Statistiken \n',
-            'Anzahl Messpunkte: ' , totalcount , '\n' ,
-            'Durchschnittliche Bandbreite: ' , averagebandwidth , '\n' ,
-            'Durchschnittliche Signalstärke: ' , averagesignalstrength , '\n' ,
-            'Anzahl EDGE: ' , edgecount , ', Durschnittliche Bandbreite: ' , averageedge , '\n' ,
-            'Anzahl GPRS: ' , gprscount , ', Durschnittliche Bandbreite: ' , averagegprs , '\n' ,
-            'Anzahl UMTS: ' , umtscount , ', Durschnittliche Bandbreite: ' , averageumts , '\n' ,
-            'Anzahl HSPA,: ' , hspacount , ', Durschnittliche Bandbreite: ' , averagehspa , '\n' ,
-            'Anzahl LTE: ' , ltecount , ', Durschnittliche Bandbreite: ' , averagelte , '\n' ,
-            'Anzahl Unbekanntes Netz: ' , unknowncount , ', Durschnittliche Bandbreite: ' , averageunknown].join('');
-        $id("statistics").innerHTML="text";
+        var text = "<p>";
+        text += '<h2>Statistiken</h2><br>';
+        text += 'Anzahl Messpunkte: ' + totalcount + '<br>';
+        text += 'Durchschnittliche Bandbreite:' + averagebandwidth + '<br>';
+        text += 'Durchschnittliche Signalstärke' + averagesignalstrength + '<br>';
+        text += 'Anzahl EDGE: ' + edgecount + '<br>';
+        text += 'Anzahl GPRS: ' + gprscount + '<br>';
+        text += 'Anzahl UMTS: ' + umtscount + '<br>';
+        text += 'Anzahl HSPA+: ' + hspacount + '<br>';
+        text += 'Anzahl LTE: ' + ltecount + '<br>';
+        text += 'Anzahl unbekanntes Netz: ' + unknowncount +'<br>';
+        text += '</p>';
+
+        $id("statistics").innerHTML=text;
     }
     else{
         $id("statistics").innerHTML="Keine Messpunkte vorhanden";
