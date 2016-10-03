@@ -30,9 +30,9 @@ file_put_contents("general.js",$jsfile);
     </ul>
         <form>
             <p>Auswahl der Anzeige auf der Karte</p>
-            <input type="radio" id="radio1" name="circletype" value="bandwith" checked="checked">
+            <input type="radio" id="radio1" name="circletype" value="bandwith" checked="checked" onchange="onclick = setDisplayType(true);">
                 <label for="radio1">Bandbreite</label><br>
-            <input type="radio" id="radio2" name="circletype" value="signal">
+            <input type="radio" id="radio2" name="circletype" value="signal" onchange="onclick = setDisplayType(false);">
                 <label for="radio2">Signalstärke</label>
         </form>
 </div>

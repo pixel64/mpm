@@ -1,15 +1,15 @@
- /**
+/**
  * init.js
  * Verantwortlich für die initialisierung aller Komponenten
  */
 
+var displaytype = "bandwidth";
 var filesAsArray = {};
 var sortedFilesArray = [];
 var InitDragAndDrop = function(){
   document.body.addEventListener("dragover", handleDragOver, false);
   document.body.addEventListener("drop", handleDrop, false);
-};
-function locate() {
+};function locate() {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(getPosition,showError);
     }
@@ -37,16 +37,16 @@ function showError(error) {
     drawmap();
     switch(error.code) {
         case error.PERMISSION_DENIED:
-            alert("Nutzer hat den Zugriff auf die Position abgelehnt.")
+            customAlert("Nutzer hat den Zugriff auf die Position abgelehnt.")
             break;
         case error.POSITION_UNAVAILABLE:
-            alert("Keine Information zum Standort verfügbar.")
+            customAlert("Keine Information zum Standort verfügbar.")
             break;
         case error.TIMEOUT:
-            alert("Die Anfrage der Standortbestimmung hat zu lange gedauert.")
+            customAlert("Die Anfrage der Standortbestimmung hat zu lange gedauert.")
             break;
         case error.UNKNOWN_ERROR:
-            alert("Bei der Standortbestimmung ist ein unbekannter Fehler aufgetreten..")
+            customAlert("Bei der Standortbestimmung ist ein unbekannter Fehler aufgetreten..")
             break;
     }
 }/**
@@ -67,6 +67,7 @@ var handleDrop = function(e){
       var tmpArray = JSON.parse(result);
       filesAsArray[objectLength(filesAsArray)]=tmpArray;
       performFilter();
+      drawdataonmap(displaytype);
   }
   var files = e.target.files || e.dataTransfer.files;
   worker.postMessage({'files':files});
@@ -85,6 +86,76 @@ var performFilter = function(){
   if($id("select_signal").value > 0){
     filterSignal($id("select_signal").value);
   }
+}
+
+var drawdataonmap = function(type){
+  if(sortedFilesArray.length > 0 ) {
+    removeLayers();
+   // setCenter(sortedFilesArray[Math.floor(sortedFilesArray.length/2)][startLocation]["y"],sortedFilesArray[Math.floor(sortedFilesArray.length/2)][startLocation]["y"],15);
+    if (type == 'bandwidth') {
+      for (var i = 0; i < sortedFilesArray.length; i++) {
+        var color = 'red';
+        switch (sortedFilesArray[i]["network"]) {
+          case "GRPS":
+            color = 'brown';
+            break;
+          case "EDGE":
+            color = 'red';
+            break;
+
+          case "UMTS":
+            color = 'orange';
+            break;
+          case "HSPA+":
+            color = 'yellow';
+            break;
+          case "LTE":
+            color = 'green';
+            break;
+          default:
+            color = 'black';
+            break;
+        }
+        addCircle(sortedFilesArray[i]["startLocation"]["y"], sortedFilesArray[i]["startLocation"]["x"], Math.floor(sortedFilesArray[i]["bandwidth"]["value"]/2), color);
+      }
+    } else if (type == 'signal') {
+      for (var i = 0; i < sortedFilesArray.length; i++) {
+        var color = 'red';
+        switch (sortedFilesArray[i]["network"]) {
+          case "GRPS":
+            color = 'brown';
+            break;
+          case "EDGE":
+            color = 'red';
+            break;
+
+          case "UMTS":
+            color = 'orange';
+            break;
+          case "HSPA+":
+            color = 'yellow';
+            break;
+          case "LTE":
+            color = 'green';
+            break;
+          default:
+            color = 'black';
+            break;
+        }
+        addCircle(sortedFilesArray[i]["startLocation"]["y"], sortedFilesArray[i]["startLocation"]["x"], Math.floor(sortedFilesArray[i]["signal"] *20), color);
+      }
+
+    }
+  }
+}
+
+var setDisplayType = function(value){
+  if(value){
+    displaytype = "bandwidth";
+  } else {
+    displaytype = "signal";
+  }
+  drawdataonmap(displaytype);
 }/**
  * general.js
  * Verantwortlich für alles allgemeine
@@ -265,7 +336,6 @@ function drawmap() {
     // Define the map layer
     // Here we use a predefined layer that will be kept up to date with URL changes
     map.addLayer(new OpenLayers.Layer.OSM.TransportMap("Bahnkarte"));
-    addCircle(lon,lat,10000, 'red');
     setCenter(lon,lat,zoom);
 }
 
