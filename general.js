@@ -3,12 +3,17 @@
  * Verantwortlich für die initialisierung aller Komponenten
  */
 
+var displaytype = "bandwidth";
 var filesAsArray = {};
 var sortedFilesArray = [];
 var InitDragAndDrop = function(){
   document.body.addEventListener("dragover", handleDragOver, false);
   document.body.addEventListener("drop", handleDrop, false);
-};function locate() {
+}/*
+ *locate.js
+ */
+
+var locate = function(){
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(getPosition,showError);
     }
@@ -69,9 +74,29 @@ var handleDrop = function(e){
       performFilter();
       $id("overlay-block").style.display = "none";
       customAlert("Daten eingelesen");
+      setMapToCenter();
   }
   var files = e.target.files || e.dataTransfer.files;
   worker.postMessage({'files':files});
+}
+
+var setMapToCenter = function(){
+  if (sortedFilesArray.length > 0) {
+    var miny = 2000000;
+    var maxy = -2000000;
+    var minx = 2000000;
+    var maxx = -2000000;
+
+    // setCenter(sortedFilesArray[Math.floor(sortedFilesArray.length/2)][startLocation]["y"],sortedFilesArray[Math.floor(sortedFilesArray.length/2)][startLocation]["y"],15);
+    for (var i = 0; i < sortedFilesArray.length; i++) {
+      if (sortedFilesArray[i]["startLocation"]["y"] < miny) miny = sortedFilesArray[i]["startLocation"]["y"];
+      if (sortedFilesArray[i]["startLocation"]["y"] > maxy) maxy = sortedFilesArray[i]["startLocation"]["y"];
+      if (sortedFilesArray[i]["startLocation"]["x"] < minx) minx = sortedFilesArray[i]["startLocation"]["x"];
+      if (sortedFilesArray[i]["startLocation"]["x"] > maxx) maxx = sortedFilesArray[i]["startLocation"]["x"];
+    }
+    setCenter((+miny+ +maxy)/2.0,(+minx+ +maxx)/2.0, 11);
+  }
+
 }
 var performFilter = function(){
   var error = "";
@@ -94,6 +119,57 @@ var performFilter = function(){
       filterSignal($id("select_signal").value);
     }
   }
+  drawdataonmap(displaytype);
+  /*calculateStatistics();
+  drawStatistics();*/
+}
+
+var drawdataonmap = function(type) {
+  removeLayers();
+  if (sortedFilesArray.length > 0) {
+
+    // setCenter(sortedFilesArray[Math.floor(sortedFilesArray.length/2)][startLocation]["y"],sortedFilesArray[Math.floor(sortedFilesArray.length/2)][startLocation]["y"],15);
+    for (var i = 0; i < sortedFilesArray.length; i++) {
+      var color = 'red';
+
+      switch (sortedFilesArray[i]["network"]) {
+        case "GRPS":
+          color = 'brown';
+          break;
+        case "EDGE":
+          color = 'red';
+          break;
+
+        case "UMTS":
+          color = 'orange';
+          break;
+        case "HSPA+":
+          color = 'yellow';
+          break;
+        case "LTE":
+          color = 'green';
+          break;
+        default:
+          color = 'black';
+          break;
+      }
+      if (type == 'bandwidth') {
+        addCircle(sortedFilesArray[i]["startLocation"]["y"], sortedFilesArray[i]["startLocation"]["x"], Math.floor(sortedFilesArray[i]["bandwidth"]["value"] ), color);
+      }
+      else if (type == 'signal') {
+        addCircle(sortedFilesArray[i]["startLocation"]["y"], sortedFilesArray[i]["startLocation"]["x"], Math.floor(sortedFilesArray[i]["signal"] * 40), color);
+      }
+    }
+  }
+}
+
+var setDisplayType = function(value){
+  if(value){
+    displaytype = "bandwidth";
+  } else {
+    displaytype = "signal";
+  }
+  drawdataonmap(displaytype);
 }/**
  * general.js
  * Verantwortlich für alles allgemeine
@@ -246,8 +322,8 @@ var lat;
 var standard_style = {
     strokeColor: 'black',
     strokeOpacity: 1,
-    strokeWidth: 2,
-    fillOpacity: 0.2,
+    strokeWidth: 0.2,
+    fillOpacity: 0.3,
     fillColor: "${color}"
 }
 
@@ -274,7 +350,15 @@ function drawmap() {
     // Define the map layer
     // Here we use a predefined layer that will be kept up to date with URL changes
     map.addLayer(new OpenLayers.Layer.OSM.TransportMap("Bahnkarte"));
-    addCircle(lon,lat,10000, 'red');
+    map.events.register("moveend", map, function(){
+        calculateStatistics();
+        drawStatistics();
+    });
+
+    map.events.register("zoomend", map, function(){
+        calculateStatistics();
+        drawStatistics();
+    });
     setCenter(lon,lat,zoom);
 }
 
@@ -383,4 +467,110 @@ var filterDaytime = function(from,to){
         }
     }
     sortedFilesArray = tmpSortedArray;
+}/*
+*diagrams.js
+ */
+var highestbandwidth;
+var lowestbandwidth;
+var highestsignalstrength;
+var lowestsignalstrength;
+var edgecount;
+var averageedge;
+var gprscount;
+var averagegprs;
+var umtscount;
+var averageumts;
+var hspacount;
+var averagehspa;
+var ltecount;
+var averagelte;
+var unknowncount;
+var averageunknown;
+var averagebandwidth;
+var averagesignalstrength;
+
+
+var calculateStatistics = function(){
+    if(sortedFilesArray.length>0){
+        highestbandwidth=0;
+        lowestbandwidth=2000;
+        highestsignalstrength=0;
+        lowestsignalstrength=20;
+        edgecount=0;
+        gprscount=0;
+        umtscount=0;
+        hspacount=0;
+        ltecount=0;
+        unknowncount=0;
+        averagebandwidth=0;
+        averagesignalstrength=0;
+        var totalcount=0;
+        var totalbandwidth=0;
+        var totalsignalstrength=0;
+        var totaledge= 0;
+        var totalgprs= 0;
+        var totalumts= 0;
+        var totalhspa= 0;
+        var totallte= 0;
+        var totalunknown= 0;
+        for(var i=0; i <sortedFilesArray.length;i++){
+            totalcount++;
+            var bandwidth= sortedFilesArray[i]["bandwidth"]["value"];
+            var signalstrength= Math.floor(sortedFilesArray[i]["signal"]);
+            totalbandwidth+= +bandwidth;
+            totalsignalstrength+= +signalstrength;
+            switch (sortedFilesArray[i]["network"]) {
+                case "GRPS":
+                    gprscount++;
+                    totalgprs+= +bandwidth;
+                    break;
+                case "EDGE":
+                    edgecount++;
+                    totaledge += +bandwidth;
+                    break;
+
+                case "UMTS":
+                    umtscount++;
+                    totalumts += +bandwidth;
+                    break;
+                case "HSPA+":
+                    hspacount++;
+                    totalhspa += +bandwidth;
+                    break;
+                case "LTE":
+                    ltecount++;
+                    totallte += +bandwidth;
+                    break;
+                default:
+                    unknowncount++;
+                    totalunknown += +bandwidth;
+                    break;
+            }
+            if (bandwidth>highestbandwidth) highestbandwidth= bandwidth;
+            if (signalstrength>highestbandwidth) highestsignalstrength=signalstrength;
+            if (bandwidth<lowestbandwidth) lowestbandwidth = bandwidth;
+            if (signalstrength<lowestsignalstrength) lowestsignalstrength = signalstrength;
+        }
+        averagebandwidth = totalbandwidth/totalcount;
+        averagesignalstrength = totalsignalstrength/totalcount;
+        averageedge = totaledge / edgecount;
+        averagegprs = totalgprs / gprscount;
+        averageumts = totalumts / umtscount;
+        averagehspa = totalhspa / hspacount;
+        averagelte = totallte / ltecount;
+        averageunknown = totalunknown / unknowncount;
+    }
+}
+
+var drawStatistics= function(){
+    $id("statistics").innerHTML=
+            "Anzahl Messpunkte: " + totalcount +"\n" +
+            "Durchschnittliche Bandbreite: " + averagebandwidth +"\n"+
+            "Durchschnittliche Signalstärke: "+averagesignalstrength +"\n"+
+            "Anzahl EDGE: " + edgecount +", Durschnittliche Bandbreite: "+averageedge+"\n"+
+            "Anzahl GPRS: " + gprscount +", Durschnittliche Bandbreite: "+averagegprs+"\n"+
+            "Anzahl UMTS: " + umtscount +", Durschnittliche Bandbreite: "+averageumts+"\n"+
+            "Anzahl HSPA+: " + hspacount +", Durschnittliche Bandbreite: "+averagehspa+"\n"+
+            "Anzahl LTE: " + ltecount +", Durschnittliche Bandbreite: "+averagelte+"\n"+
+            "Anzahl Unbekanntes Netz: " + unknowncount +", Durschnittliche Bandbreite: "+averageunknown    ;
 }
