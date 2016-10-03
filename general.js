@@ -494,8 +494,8 @@ var filterDaytime = function(from,to){
 var filterMapLocation = function(){
     var valuesArrayLength = objectLength(sortedFilesArray);
     var tmpSortedArray = [];
+    var bounds = map.getExtent();
     for (var i = 0; i < valuesArrayLength; i++) {
-        var bounds = map.getExtent();
         var x = Lon2Merc(parseFloat(sortedFilesArray[i]['startLocation']['y']));
         var y = Lat2Merc(parseFloat(sortedFilesArray[i]['startLocation']['x']));
         if(bounds.contains(x,y)) {
@@ -537,7 +537,7 @@ var averagesignalstrength;
 
 
 var calculateStatistics = function(){
-    if(sortedFilesArray.length>0){
+    if(sortedFilesMapArray.length>0){
         highestbandwidth=0;
         lowestbandwidth=2000;
         highestsignalstrength=0;
@@ -565,13 +565,13 @@ var calculateStatistics = function(){
         var totalhspasignal= 0;
         var totalltesignal= 0;
         var totalunknownsignal= 0;
-        for(var i=0; i <sortedFilesArray.length;i++){
+        for(var i=0; i <sortedFilesMapArray.length;i++){
             totalcount++;
-            var bandwidth= sortedFilesArray[i]["bandwidth"]["value"];
-            var signalstrength= Math.floor(sortedFilesArray[i]["signal"]);
+            var bandwidth= sortedFilesMapArray[i]["bandwidth"]["value"];
+            var signalstrength= Math.floor(sortedFilesMapArray[i]["signal"]);
             totalbandwidth+= +bandwidth;
             totalsignalstrength+= +signalstrength;
-            switch (sortedFilesArray[i]["network"]) {
+            switch (sortedFilesMapArray[i]["network"]) {
                 case "GRPS":
                     gprscount++;
                     totalgprs+= +bandwidth;
@@ -639,7 +639,7 @@ var calculateStatistics = function(){
 }
 
 var drawStatistics= function(){
-    if(sortedFilesArray.length>0) {
+    if(sortedFilesMapArray.length>0) {
         var text = "<p>";
         text += '<h2>Statistiken</h2><br>';
         text += 'Anzahl Messpunkte: ' + totalcount + '<br>';
@@ -661,7 +661,7 @@ var drawStatistics= function(){
 }
 
 var drawDiagrams = function(){
-    if(sortedFilesArray.length > 0) {
+    if(sortedFilesMapArray.length > 0) {
         var data = {
             labels: ['GPRS', 'EDGE', 'UMTS', 'HSPA+', 'LTE', 'Unknown'],
             series: [
