@@ -27,6 +27,7 @@ file_put_contents("general.js",$jsfile);
         <a href="#" onclick="customAlert('Test Fehler!!!',1)"><li class="list-group-item">Sample Error</li></a>
         <a href="#" onclick="customAlert('Test Fehler!!!')"><li class="list-group-item">Sample Notification</li></a>
         <li class="list-group-item">Menüpunkt 3</li>
+    </ul>
         <form>
             <p>Auswahl der Anzeige auf der Karte</p>
             <input type="radio" id="radio1" name="circletype" value="bandwith" checked="checked">
@@ -34,7 +35,6 @@ file_put_contents("general.js",$jsfile);
             <input type="radio" id="radio2" name="circletype" value="signal">
                 <label for="radio2">Signalstärke</label>
         </form>
-    </ul>
 </div>
 <div id="filter-button">
         <button class="btn btn-default" id="bu_filter" onclick="toggleFilter();">Filter</button>
