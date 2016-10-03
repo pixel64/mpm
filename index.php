@@ -27,6 +27,13 @@ file_put_contents("general.js",$jsfile);
         <a href="#" onclick="customAlert('Test Fehler!!!',1)"><li class="list-group-item">Sample Error</li></a>
         <a href="#" onclick="customAlert('Test Fehler!!!')"><li class="list-group-item">Sample Notification</li></a>
         <li class="list-group-item">Menüpunkt 3</li>
+        <form>
+            <p>Auswahl der Anzeige auf der Karte</p>
+            <input type="radio" id="radio1" name="circletype" value="bandwith" checked="checked">
+                <label for="radio1">Bandbreite</label><br>
+            <input type="radio" id="radio2" name="circletype" value="signal">
+                <label for="radio2">Signalstärke</label>
+        </form>
     </ul>
 </div>
 <div id="filter-button">
@@ -38,10 +45,10 @@ file_put_contents("general.js",$jsfile);
             <label>Netztyp:</label>
             <select class="form-control" id="select_network">
                 <option value="all">Alle</option>
-                <option value="EDGE">EDGE</option>
                 <option value="GPRS">GPRS</option>
-                <option value="3G">3G</option>
-                <option value="HSPA+">HSDPA</option>
+                <option value="EDGE">EDGE</option>
+                <option value="UMTS">UMSTS</option>
+                <option value="HSPA+">HSPA+</option>
                 <option value="LTE">LTE</option>
             </select>
         </li>

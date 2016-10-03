@@ -1,4 +1,4 @@
-/**
+ /**
  * init.js
  * Verantwortlich für die initialisierung aller Komponenten
  */
@@ -9,7 +9,47 @@ var InitDragAndDrop = function(){
   document.body.addEventListener("dragover", handleDragOver, false);
   document.body.addEventListener("drop", handleDrop, false);
 }
-/**
+function locate() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(getPosition,showError);
+    }
+    else {
+        alert("Browser unterstützt Geolocation nicht!");
+        // Position Friedberg als Location
+        lon = 8.7321;
+        lat = 50.3398;
+        drawmap();
+    }
+}
+
+function getPosition(position) {
+    lat = position.coords.latitude;
+    lon = position.coords.longitude;
+    drawmap();
+
+
+}
+
+function showError(error) {
+    // Position Friedberg als Location
+    lon = 8.7321;
+    lat = 50.3398;
+    drawmap();
+    switch(error.code) {
+        case error.PERMISSION_DENIED:
+            alert("Nutzer hat den Zugriff auf die Position abgelehnt.")
+            break;
+        case error.POSITION_UNAVAILABLE:
+            alert("Keine Information zum Standort verfügbar.")
+            break;
+        case error.TIMEOUT:
+            alert("Die Anfrage der Standortbestimmung hat zu lange gedauert.")
+            break;
+        case error.UNKNOWN_ERROR:
+            alert("Bei der Standortbestimmung ist ein unbekannter Fehler aufgetreten..")
+            break;
+    }
+}/**
  * eventHandler.js
  * Hier können vorher registrierte events programmiert werden
  */
@@ -40,7 +80,7 @@ var performFilter = function(){
   var valueEndTime = Math.floor(endTimeSelect.options[endTimeSelect.selectedIndex].value);
   filterDaytime(valueStartTime,valueEndTime);
   if($id("select_bandwidth").value > 0){
-    filterBandwidth($id("select_bandwidth"));
+    filterBandwidth($id("select_bandwidth").value);
   }
   if($id("select_signal").value > 0){
     filterSignal($id("select_signal").value);
@@ -191,6 +231,8 @@ function getCycleTileURL(bounds) {
 }var map;
 var standard_zoom = 10;
 var all_layers = [];
+var lon;
+var lat;
 
 var standard_style = {
     strokeColor: 'black',
@@ -203,10 +245,8 @@ var standard_style = {
 function drawmap() {
     OpenLayers.Lang.setCode('de');
 
-    // Startposition und Zoomstufe der Karte
-    var lon = 8.7321;
-    var lat = 50.3398;
-    var zoom = 10;
+    // Zoomstufe der Karte
+    var zoom = 12;
     map = new OpenLayers.Map("map", {
         controls: [
             new OpenLayers.Control.Navigation(),
