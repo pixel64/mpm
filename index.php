@@ -18,7 +18,7 @@ file_put_contents("general.js",$jsfile);
     <script type="text/javascript" src="http://www.openstreetmap.org/openlayers/OpenStreetMap.js"></script>
     <title></title>
 </head>
-<body onload="drawmap();">
+<body onload="locate();">
 <div id="menue-button">
     <button class="btn btn-default" id="bu_menue" onclick="toggleMenue();">Menü</button>
 </div>
