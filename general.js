@@ -6,6 +6,7 @@
 var displaytype = "bandwidth";
 var filesAsArray = {};
 var sortedFilesArray = [];
+var sortedFilesMapArray = [];
 var InitDragAndDrop = function(){
   document.body.addEventListener("dragover", handleDragOver, false);
   document.body.addEventListener("drop", handleDrop, false);
@@ -119,6 +120,7 @@ var performFilter = function(){
       filterSignal($id("select_signal").value);
     }
   }
+  filterMapLocation();
   drawdataonmap(displaytype);
 }
 
@@ -487,6 +489,20 @@ var filterDaytime = function(from,to){
         }
     }
     sortedFilesArray = tmpSortedArray;
+}
+
+var filterMapLocation = function(){
+    var valuesArrayLength = objectLength(sortedFilesArray);
+    var tmpSortedArray = [];
+    for (var i = 0; i < valuesArrayLength; i++) {
+        var bounds = map.getExtent();
+        var x = Lon2Merc(parseFloat(sortedFilesArray[i]['startLocation']['x']));
+        var y = Lat2Merc(parseFloat(sortedFilesArray[i]['startLocation']['y']));
+        if(x > bounds.left && x < bounds.right && y > bounds.bottom && y < bounds.top) {
+            tmpSortedArray.push(sortedFilesArray[i]);
+        }
+    }
+    sortedFilesMapArray = tmpSortedArray;
 }/*
 *diagrams.js
  */
@@ -633,7 +649,7 @@ var drawStatistics= function(){
         text += 'Anzahl LTE: ' + ltecount + '<br>';
         text += 'Anzahl unbekanntes Netz: ' + unknowncount +'<br>';
         text += '</p>';
-        
+
         $id("statistics").innerHTML=text;
     }
     else{
