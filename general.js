@@ -765,9 +765,9 @@ var getColor = function(number){
             break;
         case 1:color='red';
             break;
-        case 2:color='yellow';
+        case 2:color='orange';
             break;
-        case 3:color='orange';
+        case 3:color='yellow';
             break;
         case 4:color='green';
             break;
