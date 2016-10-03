@@ -120,8 +120,6 @@ var performFilter = function(){
     }
   }
   drawdataonmap(displaytype);
-  /*calculateStatistics();
-  drawStatistics();*/
 }
 
 var drawdataonmap = function (type) {
@@ -170,6 +168,28 @@ var setDisplayType = function(value){
     displaytype = "signal";
   }
   drawdataonmap(displaytype);
+}
+
+var showStatistics = function(){
+  if($id("overlay-diagram").style.display == "block"){
+    $id("overlay-diagram").style.display = "none";
+  }
+  $id("overlay-statistics").style.display = "block";
+  calculateStatistics();
+  drawStatistics();
+}
+var closeStatistics = function(){
+  $id("overlay-statistics").style.display = "none";
+}
+
+var showDiagram = function(){
+  if($id("overlay-statistics").style.display == "block"){
+    $id("overlay-statistics").style.display = "none";
+  }
+  $id("overlay-diagram").style.display = "block";
+}
+var closeDiagram = function(){
+  $id("overlay-diagram").style.display = "none";
 }/**
  * general.js
  * Verantwortlich für alles allgemeine
@@ -351,13 +371,11 @@ function drawmap() {
     // Here we use a predefined layer that will be kept up to date with URL changes
     map.addLayer(new OpenLayers.Layer.OSM.TransportMap("Bahnkarte"));
     map.events.register("moveend", map, function(){
-        calculateStatistics();
-        drawStatistics();
+        
     });
 
     map.events.register("zoomend", map, function(){
-        calculateStatistics();
-        drawStatistics();
+
     });
     setCenter(lon,lat,zoom);
 }
@@ -564,20 +582,23 @@ var calculateStatistics = function(){
 
 var drawStatistics= function(){
     if(sortedFilesArray.length>0) {
-     /*   $id("statistics").innerHTML =
-            "Statistiken:\n"+
-            "Anzahl Messpunkte: " + totalcount + "\n" +
-            "Durchschnittliche Bandbreite: " + averagebandwidth + "\n" +
-            "Durchschnittliche Signalstärke: " + averagesignalstrength + "\n" +
-            "Anzahl EDGE: " + edgecount + ", Durschnittliche Bandbreite: " + averageedge + "\n" +
-            "Anzahl GPRS: " + gprscount + ", Durschnittliche Bandbreite: " + averagegprs + "\n" +
-            "Anzahl UMTS: " + umtscount + ", Durschnittliche Bandbreite: " + averageumts + "\n" +
-            "Anzahl HSPA+: " + hspacount + ", Durschnittliche Bandbreite: " + averagehspa + "\n" +
-            "Anzahl LTE: " + ltecount + ", Durschnittliche Bandbreite: " + averagelte + "\n" +
-            "Anzahl Unbekanntes Netz: " + unknowncount + ", Durschnittliche Bandbreite: " + averageunknown;
-            */
+        var text=['Statistiken \n',
+            'Anzahl Messpunkte: ' , totalcount , '\n' ,
+            'Durchschnittliche Bandbreite: ' , averagebandwidth , '\n' ,
+            'Durchschnittliche Signalstärke: ' , averagesignalstrength , '\n' ,
+            'Anzahl EDGE: ' , edgecount , ', Durschnittliche Bandbreite: ' , averageedge , '\n' ,
+            'Anzahl GPRS: ' , gprscount , ', Durschnittliche Bandbreite: ' , averagegprs , '\n' ,
+            'Anzahl UMTS: ' , umtscount , ', Durschnittliche Bandbreite: ' , averageumts , '\n' ,
+            'Anzahl HSPA,: ' , hspacount , ', Durschnittliche Bandbreite: ' , averagehspa , '\n' ,
+            'Anzahl LTE: ' , ltecount , ', Durschnittliche Bandbreite: ' , averagelte , '\n' ,
+            'Anzahl Unbekanntes Netz: ' , unknowncount , ', Durschnittliche Bandbreite: ' , averageunknown].join('');
+        $id("statistics").innerHTML="text";
     }
     else{
-       // $id("statistics").innerHTML="";
+        $id("statistics").innerHTML="Keine Messpunkte vorhanden";
     }
+}
+
+var drawDiagrams = function(){
+
 }
