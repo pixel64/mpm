@@ -70,9 +70,29 @@ var handleDrop = function(e){
       performFilter();
       $id("overlay-block").style.display = "none";
       customAlert("Daten eingelesen");
+      setMapToCenter();
   }
   var files = e.target.files || e.dataTransfer.files;
   worker.postMessage({'files':files});
+}
+
+var setMapToCenter = function(){
+  if (sortedFilesArray.length > 0) {
+    var miny = 2000000;
+    var maxy = -2000000;
+    var minx = 2000000;
+    var maxx = -2000000;
+
+    // setCenter(sortedFilesArray[Math.floor(sortedFilesArray.length/2)][startLocation]["y"],sortedFilesArray[Math.floor(sortedFilesArray.length/2)][startLocation]["y"],15);
+    for (var i = 0; i < sortedFilesArray.length; i++) {
+      if (sortedFilesArray[i]["startLocation"]["y"] < miny) miny = sortedFilesArray[i]["startLocation"]["y"];
+      if (sortedFilesArray[i]["startLocation"]["y"] > maxy) maxy = sortedFilesArray[i]["startLocation"]["y"];
+      if (sortedFilesArray[i]["startLocation"]["x"] < minx) minx = sortedFilesArray[i]["startLocation"]["x"];
+      if (sortedFilesArray[i]["startLocation"]["x"] > maxx) maxx = sortedFilesArray[i]["startLocation"]["x"];
+    }
+    setCenter((+miny+ +maxy)/2.0,(+minx+ +maxx)/2.0, 11);
+  }
+
 }
 var performFilter = function(){
   var error = "";
@@ -101,18 +121,10 @@ var performFilter = function(){
 var drawdataonmap = function(type) {
   removeLayers();
   if (sortedFilesArray.length > 0) {
-    var miny = 2000000;
-    var maxy = -2000000;
-    var minx = 2000000;
-    var maxx = -2000000;
 
     // setCenter(sortedFilesArray[Math.floor(sortedFilesArray.length/2)][startLocation]["y"],sortedFilesArray[Math.floor(sortedFilesArray.length/2)][startLocation]["y"],15);
     for (var i = 0; i < sortedFilesArray.length; i++) {
       var color = 'red';
-      if (sortedFilesArray[i]["startLocation"]["y"] < miny) miny = sortedFilesArray[i]["startLocation"]["y"];
-      if (sortedFilesArray[i]["startLocation"]["y"] > maxy) maxy = sortedFilesArray[i]["startLocation"]["y"];
-      if (sortedFilesArray[i]["startLocation"]["x"] < minx) minx = sortedFilesArray[i]["startLocation"]["x"];
-      if (sortedFilesArray[i]["startLocation"]["x"] > maxx) maxx = sortedFilesArray[i]["startLocation"]["x"];
 
       switch (sortedFilesArray[i]["network"]) {
         case "GRPS":
@@ -142,7 +154,6 @@ var drawdataonmap = function(type) {
         addCircle(sortedFilesArray[i]["startLocation"]["y"], sortedFilesArray[i]["startLocation"]["x"], Math.floor(sortedFilesArray[i]["signal"] * 40), color);
       }
     }
-    setCenter((+miny+ +maxy)/2.0,(+minx+ +maxx)/2.0, 11);
   }
 }
 
@@ -333,6 +344,13 @@ function drawmap() {
     // Define the map layer
     // Here we use a predefined layer that will be kept up to date with URL changes
     map.addLayer(new OpenLayers.Layer.OSM.TransportMap("Bahnkarte"));
+    map.events.register("moveend", map, function(){
+        
+    });
+
+    map.events.register("zoomend", map, function(){
+
+    });
     setCenter(lon,lat,zoom);
 }
 
