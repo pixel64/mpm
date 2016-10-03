@@ -93,12 +93,7 @@ var performFilter = function(){
     }
     if($id("select_signal").value > 0){
       filterSignal($id("select_signal").value);
-  filterDaytime(valueStartTime,valueEndTime);
-  if($id("select_bandwidth").value > 0){
-    filterBandwidth($id("select_bandwidth").value);
-  }
-  if($id("select_signal").value > 0){
-    filterSignal($id("select_signal").value);
+    }
   }
   drawdataonmap(displaytype);
 }
