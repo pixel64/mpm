@@ -24,17 +24,15 @@ file_put_contents("general.js",$jsfile);
 </div>
 <div id="overlay-menue">
     <ul class="list-group">
-        <a href="#" onclick="customAlert('Test Fehler!!!',1)"><li class="list-group-item">Sample Error</li></a>
-        <a href="#" onclick="customAlert('Test Fehler!!!')"><li class="list-group-item">Sample Notification</li></a>
-        <li class="list-group-item">Menüpunkt 3</li>
-    </ul>
-        <form>
+        <li class="list-group-item">
+            <form>
             <p>Auswahl der Anzeige auf der Karte</p>
             <input type="radio" id="radio1" name="circletype" value="bandwith" checked="checked" onchange="onclick = setDisplayType(true);">
-                <label for="radio1">Bandbreite</label><br>
+            <label for="radio1">Bandbreite</label><br>
             <input type="radio" id="radio2" name="circletype" value="signal" onchange="onclick = setDisplayType(false);">
-                <label for="radio2">Signalstärke</label>
+            <label for="radio2">Signalstärke</label>
         </form>
+    </ul>
 </div>
 <div id="filter-button">
         <button class="btn btn-default" id="bu_filter" onclick="toggleFilter();">Filter</button>
@@ -126,6 +124,12 @@ file_put_contents("general.js",$jsfile);
 </div>
 <div id="map">
 
+</div>
+<div id="overlay-block">
+    <div class="overlay-layer"></div>
+    <div class="alert alert-info overlay-message" role="alert">
+        <strong>BITTE WARTEN</strong> Es werden daten verarbeitet.
+    </div>
 </div>
 <div id="message"></div>
 </body>
