@@ -119,3 +119,23 @@ html, body {
     clear:both;
     width:inherit;
 }
+#legend{
+    padding:10px;
+    text-align: center;
+    z-index: 1;
+    position: absolute;
+    bottom: 0px;
+    left: 430px;
+    right: 430px;
+    border-radius: 5px;
+}
+
+.rect{
+    -webkit-border-radius:5px;
+    -moz-border-radius:5px;
+    border-radius: 5px;
+}
+
+.padding{
+    padding: 2px;
+}
