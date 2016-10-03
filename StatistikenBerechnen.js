@@ -1,33 +1,33 @@
 
-
 var jsonfile = file_get_contents('.../JsonBeispiel.json');
 var jsonarray = json_decode(jsonfile);
 
-function getStatistics(var jsonarray)
+function getStatistics(jsonarray)
 {
+
 	var rtn = {};
-	foreach(var locations in jsonarray["Location"])
+	for(var locations in jsonarray["Location"])
 	{
-		x = locations["Xcoordinate"];
-		y = locations["Ycoordinate"];
+		var xCoord = locations["Xcoordinate"];
+		var yCoord = locations["Ycoordinate"];
 		
-		val1 = {}
-		val2 = {}
-		val3 = {}
-		nettype = {}
+		var val1 = {}
+		var val2 = {}
+		var val3 = {}
+		var nettype = {}
 		
-		foreach (var networks in locations["Network"]){
+		for (var networks in locations["Network"]){
 			val1.push(networks["Value1"]);
 			val2.push(networks["Value2"]);
 			val3.push(networks["Value3"]);
 			nettype.push(networks["Mobiletype"]);
 		}
 		
-		val1m = mittelwert(val1);
-		val2m = mittelwert(val2);
-		val3m = mittelwert(val3);
+		var val1m = mittelwert(val1);
+		var val2m = mittelwert(val2);
+		var val3m = mittelwert(val3);
 		
-		rtn.push({x,y,val1m,val2m,val3m,nettype});
+		rtn.push({xCoord,yCoord,val1m,val2m,val3m,nettype});
 	}
 	return rtn;
 }
