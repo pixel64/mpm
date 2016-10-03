@@ -152,8 +152,7 @@ file_put_contents("general.js",$jsfile);
     <div class="overlay-layer block-map"></div>
     <div class="diagram-form">
         <div id="diagram">Diagramme:</div>
-        <div class="ct-chart ct-golden-section" id="chart1"></div>
-        <div class="ct-chart ct-golden-section" id="chart2"></div>
+        <div class="ct-chart ct-golden-section"></div>
         <button onclick="closeDiagram()" class="btn btn-default">Schließen</button>
     </div>
 </div>

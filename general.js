@@ -187,6 +187,8 @@ var showDiagram = function(){
     $id("overlay-statistics").style.display = "none";
   }
   $id("overlay-diagram").style.display = "block";
+  calculateStatistics();
+  drawDiagrams();
 }
 var closeDiagram = function(){
   $id("overlay-diagram").style.display = "none";
@@ -582,7 +584,7 @@ var calculateStatistics = function(){
 
 var drawStatistics= function(){
     if(sortedFilesArray.length>0) {
-        var text=['Statistiken \n',
+        var text=['Statistiken <br>',
             'Anzahl Messpunkte: ' , totalcount , '\n' ,
             'Durchschnittliche Bandbreite: ' , averagebandwidth , '\n' ,
             'Durchschnittliche Signalstärke: ' , averagesignalstrength , '\n' ,
@@ -600,5 +602,24 @@ var drawStatistics= function(){
 }
 
 var drawDiagrams = function(){
+    var data = {
+        labels: ['EDGE','HSPA+'],
+        series: [
+            [50,10]
+        ]
+    };
+    var arr=[50,10];
+    var max= 50;
 
+    var options = {
+        high: max,
+        low: 0,
+        axisX: {
+            labelInterpolationFnc: function(value, index) {
+                return index % 2 === 0 ? value : null;
+            }
+        }
+    };
+
+    new Chartist.Bar('.ct-chart', data, options);
 }
