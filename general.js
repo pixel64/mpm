@@ -375,11 +375,11 @@ function drawmap() {
     // Here we use a predefined layer that will be kept up to date with URL changes
     map.addLayer(new OpenLayers.Layer.OSM.TransportMap("Bahnkarte"));
     map.events.register("moveend", map, function(){
-        
+        filterMapLocation();
     });
 
     map.events.register("zoomend", map, function(){
-
+        filterMapLocation();
     });
     setCenter(lon,lat,zoom);
 }
@@ -496,13 +496,16 @@ var filterMapLocation = function(){
     var tmpSortedArray = [];
     for (var i = 0; i < valuesArrayLength; i++) {
         var bounds = map.getExtent();
-        var x = Lon2Merc(parseFloat(sortedFilesArray[i]['startLocation']['x']));
-        var y = Lat2Merc(parseFloat(sortedFilesArray[i]['startLocation']['y']));
-        if(x > bounds.left && x < bounds.right && y > bounds.bottom && y < bounds.top) {
+        var x = Lon2Merc(parseFloat(sortedFilesArray[i]['startLocation']['y']));
+        var y = Lat2Merc(parseFloat(sortedFilesArray[i]['startLocation']['x']));
+        if(bounds.contains(x,y)) {
             tmpSortedArray.push(sortedFilesArray[i]);
         }
     }
     sortedFilesMapArray = tmpSortedArray;
+    calculateStatistics();
+    drawStatistics();
+    drawDiagrams();
 }/*
 *diagrams.js
  */
@@ -658,68 +661,74 @@ var drawStatistics= function(){
 }
 
 var drawDiagrams = function(){
-    var data = {
-        labels: ['GPRS','EDGE','UMTS','HSPA+','LTE','Unknown'],
-        series: [
-            [averagegprs, averageedge,averageumts,averagehspa,averagelte,averageunknown]
-        ]
-    };
+    if(sortedFilesArray.length > 0) {
+        var data = {
+            labels: ['GPRS', 'EDGE', 'UMTS', 'HSPA+', 'LTE', 'Unknown'],
+            series: [
+                [averagegprs, averageedge, averageumts, averagehspa, averagelte, averageunknown]
+            ]
+        };
 
-    var options = {
-        high: 1300,
-        low: 0,
-        axisX: {
-            labelInterpolationFnc: function(value, index) {
-                return '<big><b>'+value+'</b></big>';
+        var options = {
+            high: 1300,
+            low: 0,
+            axisX: {
+                labelInterpolationFnc: function (value, index) {
+                    return '<big><b>' + value + '</b></big>';
+                }
+            },
+            axisY: {
+                labelInterpolationFnc: function (value, index) {
+                    return '<big><b></b>' + value + " Kbps" + '</b></big>';
+                }
             }
-        },
-        axisY:{
-            labelInterpolationFnc: function(value, index) {
-                return'<big><b></b>'+value+ " Kbps" +'</b></big>';
+        };
+        var color = 0;
+        new Chartist.Bar('#chart1', data, options).on('draw', function (data) {
+            if (data.type === 'bar') {
+                data.element.attr({
+                    style: 'stroke:' + getColor(color) + '; stroke-width:40px'
+                });
+                color++;
+                if (color >= 6) color = 0;
             }
-        }
-    };
-    var color = 0;
-    new Chartist.Bar('#chart1', data, options).on('draw', function(data) {
-        if(data.type === 'bar') {
-            data.element.attr({
-                style: 'stroke:'+getColor(color) +'; stroke-width:40px'
-            });
-            color++;
-            if(color >= 6) color = 0;
-        }
-    });
-    var data2 = {
-        labels: ['GPRS','EDGE','UMTS','HSPA+','LTE','Unknown'],
-        series: [
-            [averagegprssignal, averageedgesignal,averageumtssignal,averagehspasignal,averageltesignal,averageunknownsignal]
-        ]
-    };
+        });
+        var data2 = {
+            labels: ['GPRS', 'EDGE', 'UMTS', 'HSPA+', 'LTE', 'Unknown'],
+            series: [
+                [averagegprssignal, averageedgesignal, averageumtssignal, averagehspasignal, averageltesignal, averageunknownsignal]
+            ]
+        };
 
-    var options2 = {
-        high: 15,
-        low: 0,
-        axisX: {
-            labelInterpolationFnc: function(value, index) {
-                return '<big><b>'+value+'</b></big>';
+        var options2 = {
+            high: 15,
+            low: 0,
+            axisX: {
+                labelInterpolationFnc: function (value, index) {
+                    return '<big><b>' + value + '</b></big>';
+                }
+            },
+            axisY: {
+                labelInterpolationFnc: function (value, index) {
+                    return '<big><b></b>' + value + '</b></big>';
+                }
             }
-        },
-        axisY:{
-            labelInterpolationFnc: function(value, index) {
-                return'<big><b></b>'+value+'</b></big>';
+        };
+        var color = 0;
+        new Chartist.Bar('#chart2', data2, options2).on('draw', function (data) {
+            if (data.type === 'bar') {
+                data.element.attr({
+                    style: 'stroke:' + getColor(color) + '; stroke-width:40px'
+                });
+                color++;
+                if (color >= 6) color = 0;
             }
-        }
-    };
-    var color = 0;
-    new Chartist.Bar('#chart2', data2, options2).on('draw', function(data) {
-        if(data.type === 'bar') {
-            data.element.attr({
-                style: 'stroke:'+getColor(color)+'; stroke-width:40px'
-            });
-            color++;
-            if(color >= 6) color = 0;
-        }
-    });
+        });
+    }
+    else {
+        $id("chart1").innerHTML="";
+        $id("chart2").innerHTML="";
+    }
 }
 
 var getColor = function(number){
