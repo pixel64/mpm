@@ -10,14 +10,19 @@ getFile = function(file){
         var reader = new FileReader();
         reader.onload = function(e){
             lines = this.result.split('\n');
-            var parsedArray = parseArray(lines);
-            var stringObj = JSON.stringify(parsedArray);
-            postMessage(stringObj);
+            var test = lines[0].split(";");
+            if(test[0] === "version") {
+                var parsedArray = parseArray(lines);
+                var stringObj = JSON.stringify(parsedArray);
+                postMessage(stringObj);
+            }else{
+                postMessage({error:"Die Datei ist ungültig."})
+            }
         }
         reader.readAsText(file);
 
     }else{
-        postMessage({error:"File not a text file"});
+        postMessage({error:"Die Datei ist ungültig."});
     }
 }
 
