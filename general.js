@@ -75,7 +75,7 @@ var handleDrop = function(e){
       $id("overlay-block").style.display = "none";
       customAlert("Daten eingelesen");
       setMapToCenter();
-  }
+    }
   var files = e.target.files || e.dataTransfer.files;
   worker.postMessage({'files':files});
 }
@@ -124,7 +124,7 @@ var performFilter = function(){
   drawStatistics();*/
 }
 
-var drawdataonmap = function(type) {
+var drawdataonmap = function (type) {
   removeLayers();
   if (sortedFilesArray.length > 0) {
 
@@ -154,7 +154,7 @@ var drawdataonmap = function(type) {
           break;
       }
       if (type == 'bandwidth') {
-        addCircle(sortedFilesArray[i]["startLocation"]["y"], sortedFilesArray[i]["startLocation"]["x"], Math.floor(sortedFilesArray[i]["bandwidth"]["value"] ), color);
+        addCircle(sortedFilesArray[i]["startLocation"]["y"], sortedFilesArray[i]["startLocation"]["x"], Math.floor(sortedFilesArray[i]["bandwidth"]["value"]), color);
       }
       else if (type == 'signal') {
         addCircle(sortedFilesArray[i]["startLocation"]["y"], sortedFilesArray[i]["startLocation"]["x"], Math.floor(sortedFilesArray[i]["signal"] * 40), color);
@@ -426,7 +426,7 @@ var filterNetwork = function(network){
             var valuesArray = filesAsArray[i];
             var valuesArrayLength = objectLength(valuesArray);
             for (var j = 0; j < valuesArrayLength; j++) {
-                if (valuesArray[j]["networks"][0]["subtype"] === network) {
+                if (valuesArray[j]["network"] === network) {
                     sortedFilesArray.push(valuesArray[j]);
                 }
             }
@@ -563,14 +563,21 @@ var calculateStatistics = function(){
 }
 
 var drawStatistics= function(){
-    $id("statistics").innerHTML=
-            "Anzahl Messpunkte: " + totalcount +"\n" +
-            "Durchschnittliche Bandbreite: " + averagebandwidth +"\n"+
-            "Durchschnittliche Signalstärke: "+averagesignalstrength +"\n"+
-            "Anzahl EDGE: " + edgecount +", Durschnittliche Bandbreite: "+averageedge+"\n"+
-            "Anzahl GPRS: " + gprscount +", Durschnittliche Bandbreite: "+averagegprs+"\n"+
-            "Anzahl UMTS: " + umtscount +", Durschnittliche Bandbreite: "+averageumts+"\n"+
-            "Anzahl HSPA+: " + hspacount +", Durschnittliche Bandbreite: "+averagehspa+"\n"+
-            "Anzahl LTE: " + ltecount +", Durschnittliche Bandbreite: "+averagelte+"\n"+
-            "Anzahl Unbekanntes Netz: " + unknowncount +", Durschnittliche Bandbreite: "+averageunknown    ;
+    if(sortedFilesArray.length>0) {
+     /*   $id("statistics").innerHTML =
+            "Statistiken:\n"+
+            "Anzahl Messpunkte: " + totalcount + "\n" +
+            "Durchschnittliche Bandbreite: " + averagebandwidth + "\n" +
+            "Durchschnittliche Signalstärke: " + averagesignalstrength + "\n" +
+            "Anzahl EDGE: " + edgecount + ", Durschnittliche Bandbreite: " + averageedge + "\n" +
+            "Anzahl GPRS: " + gprscount + ", Durschnittliche Bandbreite: " + averagegprs + "\n" +
+            "Anzahl UMTS: " + umtscount + ", Durschnittliche Bandbreite: " + averageumts + "\n" +
+            "Anzahl HSPA+: " + hspacount + ", Durschnittliche Bandbreite: " + averagehspa + "\n" +
+            "Anzahl LTE: " + ltecount + ", Durschnittliche Bandbreite: " + averagelte + "\n" +
+            "Anzahl Unbekanntes Netz: " + unknowncount + ", Durschnittliche Bandbreite: " + averageunknown;
+            */
+    }
+    else{
+       // $id("statistics").innerHTML="";
+    }
 }

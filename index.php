@@ -13,9 +13,11 @@ file_put_contents("general.js",$jsfile);
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="chartist/chartist.min.css">
     <link rel="stylesheet" href="style.css">
     <script type="text/javascript" src="http://www.openlayers.org/api/OpenLayers.js"></script>
     <script type="text/javascript" src="http://www.openstreetmap.org/openlayers/OpenStreetMap.js"></script>
+    <script type="text/javascript" src="chartist/chartist.min.js"></script>
     <title></title>
 </head>
 <body onload="locate();">
