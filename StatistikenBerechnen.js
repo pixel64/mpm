@@ -6,7 +6,7 @@ var jsonarray = json_decode(jsonfile);
 function getStatistics(var jsonarray)
 {
 	var rtn = {};
-	foreach(var locations in jsonarray["Location"])
+	for(var locations in jsonarray["Location"])
 	{
 		x = locations["Xcoordinate"];
 		y = locations["Ycoordinate"];
@@ -16,7 +16,7 @@ function getStatistics(var jsonarray)
 		val3 = {}
 		nettype = {}
 		
-		foreach (var networks in locations["Network"]){
+		for (var networks in locations["Network"]){
 			val1.push(networks["Value1"]);
 			val2.push(networks["Value2"]);
 			val3.push(networks["Value3"]);
