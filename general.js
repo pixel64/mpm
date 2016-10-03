@@ -317,7 +317,7 @@ var standard_style = {
     strokeColor: 'black',
     strokeOpacity: 1,
     strokeWidth: 0.2,
-    fillOpacity: 0.2,
+    fillOpacity: 0.3,
     fillColor: "${color}"
 }
 
