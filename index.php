@@ -38,10 +38,10 @@ file_put_contents("general.js",$jsfile);
             <label>Netztyp:</label>
             <select class="form-control" id="select_network">
                 <option value="all">Alle</option>
-                <option value="EDGE">EDGE</option>
                 <option value="GPRS">GPRS</option>
-                <option value="3G">3G</option>
-                <option value="HSPA+">HSDPA</option>
+                <option value="EDGE">EDGE</option>
+                <option value="UMTS">UMSTS</option>
+                <option value="HSPA+">HSPA+</option>
                 <option value="LTE">LTE</option>
             </select>
         </li>
