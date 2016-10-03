@@ -45,7 +45,7 @@ file_put_contents("general.js",$jsfile);
                 <option value="all">Alle</option>
                 <option value="GPRS">GPRS</option>
                 <option value="EDGE">EDGE</option>
-                <option value="UMTS">UMSTS</option>
+                <option value="UMTS">UMTS</option>
                 <option value="HSPA+">HSPA+</option>
                 <option value="LTE">LTE</option>
             </select>
@@ -111,7 +111,7 @@ file_put_contents("general.js",$jsfile);
         </li>
         <li class="list-group-item">
             <label id="bandwith_select_value">Minimale Bandbreite: 0</label>
-            <input id="select_bandwidth" type="range" min =0 max =10000 step =500 value=0 onchange="updateBandwithNumber(this.value);">
+            <input id="select_bandwidth" type="range" min =0 max =2000 step =20 value=0 onchange="updateBandwithNumber(this.value);">
         </li>
         <li class="list-group-item">
             <label id="signal_select_value">Minimale Signalstärke: 0</label>
