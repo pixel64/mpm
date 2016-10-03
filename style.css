@@ -108,3 +108,14 @@ html, body {
     width:400px;
     height:300px;
 }
+.diagram{
+    float:left;
+    clear:none;
+}
+.btn-default{
+    clear:both;
+}
+.clear{
+    clear:both;
+    width:inherit;
+}

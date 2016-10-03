@@ -605,7 +605,7 @@ var calculateStatistics = function(){
                     break;
             }
             if (bandwidth>highestbandwidth) highestbandwidth= bandwidth;
-            if (signalstrength>highestbandwidth) highestsignalstrength=signalstrength;
+            if (signalstrength>highestsignalstrength) highestsignalstrength=signalstrength;
             if (bandwidth<lowestbandwidth) lowestbandwidth = bandwidth;
             if (signalstrength<lowestsignalstrength) lowestsignalstrength = signalstrength;
         }
@@ -643,7 +643,11 @@ var drawStatistics= function(){
         var text = "<p>";
         text += '<h2>Statistiken</h2><br>';
         text += 'Anzahl Messpunkte: ' + totalcount + '<br>';
-        text += 'Durchschnittliche Bandbreite: ' + averagebandwidth + '<br>';
+        text += 'Minimale Bandbreite: ' + lowestbandwidth + ' Kbps'+ '<br>';
+        text += 'Maximale Bandbreite: ' + highestbandwidth + ' Kbps'+ '<br>';
+        text += 'Durchschnittliche Bandbreite: ' + averagebandwidth + ' Kbps'+ '<br>';
+        text += 'Minimale Signalstärke: ' + lowestsignalstrength + '<br>';
+        text += 'Maximale Signalstärke: ' + highestsignalstrength + '<br>';
         text += 'Durchschnittliche Signalstärke: ' + averagesignalstrength + '<br>';
         text += 'Anzahl EDGE: ' + edgecount + '<br>';
         text += 'Anzahl GPRS: ' + gprscount + '<br>';
@@ -659,6 +663,7 @@ var drawStatistics= function(){
         $id("statistics").innerHTML="Keine Messpunkte vorhanden";
     }
 }
+
 
 var drawDiagrams = function(){
     if(sortedFilesMapArray.length > 0) {
@@ -724,10 +729,32 @@ var drawDiagrams = function(){
                 if (color >= 6) color = 0;
             }
         });
+        var data3 = {
+            labels: ['GPRS', 'EDGE', 'UMTS', 'HSPA+', 'LTE', 'Unknown'],
+            series: [gprscount,edgecount,umtscount,hspacount,ltecount,unknowncount],
+    };
+
+        var options3 = {
+            labelInterpolationFnc: function(value) {
+                return value[0]
+            }
+        };
+
+        var color = 0;
+        new Chartist.Pie('#chart3', data3, options3).on('draw', function (data) {
+            if (data.type === 'slice') {
+                data.element.attr({
+                    style: 'fill:' + getColor(color) + '; stroke-width:40px'
+                });
+                color++;
+                if (color >= 6) color = 0;
+            }
+        });
     }
     else {
         $id("chart1").innerHTML="";
         $id("chart2").innerHTML="";
+        $id("chart3").innerHTML="";
     }
 }
 
