@@ -66,7 +66,7 @@ var parseArray = function(arr){
             tmpNetworks[networks]["datetime_unix"] = line[6];
             tmpNetworks[networks]["datetime_unix"] = line[7];
             tmpArray["signal"] += Math.floor(tmpNetworks[networks]["signalStrength"]);
-            tmpArray["network"] = tmpNetworks["subtype"];
+            tmpArray["network"] = tmpNetworks[networks]["subtype"];
             networks++;
         }else if(line[0] === "bandwidth"){
             tmpArray["networks"] = tmpNetworks;
