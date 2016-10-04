@@ -1,19 +1,26 @@
 /**
  * init.js
- * Verantwortlich für die initialisierung aller Komponenten
+ * initialisiert die Anwendung
  */
-
 var displaytype = "bandwidth";
 var filesAsArray = {};
 var sortedFilesArray = [];
 var sortedFilesMapArray = [];
+/**
+ * Initialisiert die Drag&Drop-funktionalität, indem es Eventlistener an den document.body anfügt
+ */
 var InitDragAndDrop = function(){
   document.body.addEventListener("dragover", handleDragOver, false);
   document.body.addEventListener("drop", handleDrop, false);
-}/*
- *locate.js
+}
+/**
+ * locate.js
+ *
+ * Zum feststellen der Geolocation
  */
-
+/**
+ * Fragt die Geolocation ab. Falls sie nicht abgefragt werden konnte, kommt eine Fehlermeldung und die Koordinaten werden auf eine standardpostiion
+ */
 var locate = function(){
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(getPosition,showError);
@@ -27,17 +34,25 @@ var locate = function(){
     }
 }
 
+/**
+ * speichert die Koordinaten einer position in den globalen positionskoordinaten lon und lat
+ *
+ * @param position die zu speichernde Position
+ */
 function getPosition(position) {
     lat = position.coords.latitude;
     lon = position.coords.longitude;
     drawmap();
-
-
 }
 
+
+/**
+ * Zeigt eine Fehlermeldung an
+ *
+ * @param error der Fehler, der die Fehlermeldung auslöst
+ */
 function showError(error) {
-    // Position Friedberg als Location
-    lon = 8.7321;
+    lon = 8.7321; //Friedberg
     lat = 50.3398;
     drawmap();
     switch(error.code) {
@@ -54,15 +69,28 @@ function showError(error) {
             customAlert("Bei der Standortbestimmung ist ein unbekannter Fehler aufgetreten..",1)
             break;
     }
-}/**
+}
+/**
  * eventHandler.js
  * Hier können vorher registrierte events programmiert werden
  */
 var worker = null;
+
+/**
+ * Eventhandling für das DragOver event
+ *
+ * @param e das erzeugte event
+ */
 var handleDragOver = function(e){
   e.stopPropagation();
   e.preventDefault();
 }
+
+/**
+ * Eventhandling für das ende des Drag&Drop events
+ *
+ * @param e das Event, das beim drop erzeugt wurde
+ */
 var handleDrop = function(e){
   e.stopPropagation();
   e.preventDefault();
@@ -87,14 +115,16 @@ var handleDrop = function(e){
   worker.postMessage({'files':files});
 }
 
+/**
+ * Funktion, die die Map auf die Mitte der eingelesenen Daten zentriert
+ */
 var setMapToCenter = function(){
   if (sortedFilesArray.length > 0) {
     var miny = 2000000;
     var maxy = -2000000;
     var minx = 2000000;
     var maxx = -2000000;
-
-    // setCenter(sortedFilesArray[Math.floor(sortedFilesArray.length/2)][startLocation]["y"],sortedFilesArray[Math.floor(sortedFilesArray.length/2)][startLocation]["y"],15);
+      //bestimmung der Randpunkte
     for (var i = 0; i < sortedFilesArray.length; i++) {
       if (sortedFilesArray[i]["startLocation"]["y"] < miny) miny = sortedFilesArray[i]["startLocation"]["y"];
       if (sortedFilesArray[i]["startLocation"]["y"] > maxy) maxy = sortedFilesArray[i]["startLocation"]["y"];
@@ -105,6 +135,11 @@ var setMapToCenter = function(){
   }
 
 }
+
+/**
+ * Funktion, die die eingelesenen Daten nach den Filtereinstellungen filtert.
+ * speichert alle gefilterten daten in sortedFilesArray und die Daten des Momentanen Bildausschnittes in sortedFilesMapArray.
+ */
 var performFilter = function(){
   var error = "";
   var network = $id("select_network");
@@ -112,11 +147,7 @@ var performFilter = function(){
   var valueStartTime = Math.floor(startTimeSelect.options[startTimeSelect.selectedIndex].value);
   var endTimeSelect = $id("select_endtime");
   var valueEndTime = Math.floor(endTimeSelect.options[endTimeSelect.selectedIndex].value);
-  if(valueStartTime > valueEndTime){
-    error = true;
-    customAlert("Die Start Zeit liegt über der End Zeit",1);
-  }
-  if(!error){
+
     filterNetwork(network.options[network.selectedIndex].value);
     filterDaytime(valueStartTime,valueEndTime);
     if($id("select_bandwidth").value > 0){
@@ -125,11 +156,16 @@ var performFilter = function(){
     if($id("select_signal").value > 0){
       filterSignal($id("select_signal").value);
     }
-  }
+
   filterMapLocation();
   drawdataonmap(displaytype);
 }
 
+/**
+ * Malt die gefilterten Daten auf die Karte
+ *
+ * @param type Der Anzeigetyp. 'bandwith' für anzeige von Netztyp und Bandbreite, 'signal' für Netztyp und Signalstärke
+ */
 var drawdataonmap = function (type) {
   removeLayers();
   if (sortedFilesArray.length > 0) {
@@ -169,6 +205,11 @@ var drawdataonmap = function (type) {
   }
 }
 
+/**
+ * Stellt den Anzeigetyp ein.
+ *
+ * @param value boolean für den Displaytyp. true für Bandbreite, false für Signalstärke
+ */
 var setDisplayType = function(value){
   if(value){
     displaytype = "bandwidth";
@@ -178,6 +219,9 @@ var setDisplayType = function(value){
   drawdataonmap(displaytype);
 }
 
+/**
+ * Zeigt das Statistiken-Overlay an
+ */
 var showStatistics = function(){
   if($id("overlay-diagram").style.display == "block"){
     $id("overlay-diagram").style.display = "none";
@@ -190,6 +234,9 @@ var closeStatistics = function(){
   $id("overlay-statistics").style.display = "none";
 }
 
+/**
+ * Zeigt das Diagramme-Overlay an
+ */
 var showDiagram = function(){
   if($id("overlay-statistics").style.display == "block"){
     $id("overlay-statistics").style.display = "none";
@@ -200,13 +247,28 @@ var showDiagram = function(){
 }
 var closeDiagram = function(){
   $id("overlay-diagram").style.display = "none";
-}/**
+}
+/**
  * general.js
  * Verantwortlich für alles allgemeine
+ */
+
+/**
+ * Shortcut um Elemente über die id zu bekommen
+ *
+ * @param id die ID des Elements
+ * @returns {Element} Das DOM-Element mit der übergebenen ID
  */
 var $id = function(id){
     return document.getElementById(id);
 }
+
+/**
+ * Berechnet die Länge eines Objekts
+ *
+ * @param obj das Objekt, dessen Länge bestimmt werden soll
+ * @returns {number} die Länge des Objekts
+ */
 function objectLength(obj) {
     var result = 0;
     for(var prop in obj) {
@@ -222,9 +284,17 @@ function objectLength(obj) {
  * menue.js
  * verantwortlich für das Menü
  */
+
+/**
+ * Initialisiert das Menü
+ */
 var initMenue = function () {
 
 }
+
+/**
+ * Blendet das Menü ein und aus
+ */
 var toggleMenue = function () {
     var style = window.getComputedStyle($id("overlay-menue"));
     var display = style.getPropertyValue("display");
@@ -236,7 +306,9 @@ var toggleMenue = function () {
         $id("overlay-menue").style.display = 'block';
     }
 }
-
+/**
+ * Blendet das Filtermenü ein und aus
+ */
 var toggleFilter = function () {
     var style = window.getComputedStyle($id("overlay-filter"));
     var display = style.getPropertyValue("display");
@@ -249,19 +321,40 @@ var toggleFilter = function () {
     }
 }
 
+/**
+ * Schreibt die Minimale Signalstärke numerisch vor den Slider
+ * @param value Wert des sliders
+ */
 var updateSignalNumber = function(value) {
     $id("signal_select_value").innerHTML = "Minimale Signalstärke: "+value;
 }
+
+/**
+ * Schreibt die Minimale Bandbreite numerisch vor den Slider
+ * @param value Wert des sliders
+ */
 var updateBandwithNumber = function(value) {
-    $id("bandwith_select_value").innerHTML = "Minimale Bandbreite: "+value;
+    $id("bandwith_select_value").innerHTML = "Minimale Bandbreite: "+value + " Kbps";
 }/**
  * message.js
  * Verantwortlich für custom alerts
+ */
+
+/**
+ * Blendet eine Fehlermeldung oder Notifikation ein
+ * @param text Text der Meldung
+ * @param type 1 für Error, 0 für Info
  */
 var customAlert = function(text,type){
         document.getElementById("message").innerHTML= render_msg(text, type);
 }
 
+/**
+ * Baut den HTML-Code einer Fehlermeldung/Notifikation zusammen
+ * @param text Text der Meldung
+ * @param type 1 für Error, 0 für Info
+ * @returns {string|string} der Alert als html-code.
+ */
 var render_msg = function (text,type) {
 
     if(type == 1){
@@ -276,74 +369,41 @@ var render_msg = function (text,type) {
     return div;
 }
 
+/**
+ * schließt eine Fehlermeldung oder Notifikation
+ */
 var close_msg = function () {
     document.getElementById("message").innerHTML = "";
-}/**
- * Created by Alexander on 23.09.2016.
- */
-function jumpTo(lon, lat, zoom) {
-    var x = Lon2Merc(lon);
-    var y = Lat2Merc(lat);
-    map.setCenter(new OpenLayers.LonLat(x, y), zoom);
-    return false;
 }
+/**
+ * Quelle für die folgenden Methoden:
+ * http://wiki.openstreetmap.org/wiki/Die_JavaScript_Dateien
+ */
 
+/**
+ * Wandelt Longitude in Mercator-koordinate um
+ * @param lon Longitude
+ * @returns {number} Mercator-Wert der Longitude
+ */
 function Lon2Merc(lon) {
     return 20037508.34 * lon / 180;
 }
-
+/**
+ * Wandelt Latitude in Mercator-koordinate um
+ * @param lon Latitude
+ * @returns {number} Mercator-Wert der Latitude
+ */
 function Lat2Merc(lat) {
     var PI = 3.14159265358979323846;
     lat = Math.log(Math.tan( (90 + lat) * PI / 360)) / (PI / 180);
     return 20037508.34 * lat / 180;
 }
 
-function addMarker(layer, lon, lat, popupContentHTML) {
-
-    var ll = new OpenLayers.LonLat(Lon2Merc(lon), Lat2Merc(lat));
-    var feature = new OpenLayers.Feature(layer, ll);
-    feature.closeBox = true;
-    feature.popupClass = OpenLayers.Class(OpenLayers.Popup.FramedCloud, {minSize: new OpenLayers.Size(300, 180) } );
-    feature.data.popupContentHTML = popupContentHTML;
-    feature.data.overflow = "hidden";
-
-    var marker = new OpenLayers.Marker(ll);
-    marker.feature = feature;
-
-    var markerClick = function(evt) {
-        if (this.popup == null) {
-            this.popup = this.createPopup(this.closeBox);
-            map.addPopup(this.popup);
-            this.popup.show();
-        } else {
-            this.popup.toggle();
-        }
-        OpenLayers.Event.stop(evt);
-    };
-    marker.events.register("mousedown", feature, markerClick);
-
-    layer.addMarker(marker);
-    map.addPopup(feature.createPopup(feature.closeBox));
-}
-
-function getCycleTileURL(bounds) {
-    var res = this.map.getResolution();
-    var x = Math.round((bounds.left - this.maxExtent.left) / (res * this.tileSize.w));
-    var y = Math.round((this.maxExtent.top - bounds.top) / (res * this.tileSize.h));
-    var z = this.map.getZoom();
-    var limit = Math.pow(2, z);
-
-    if (y < 0 || y >= limit)
-    {
-        return null;
-    }
-    else
-    {
-        x = ((x % limit) + limit) % limit;
-
-        return this.url + z + "/" + x + "/" + y + "." + this.type;
-    }
-}var map;
+/**
+ * openstreetmap.js
+ * bearbeitet die Openstreetmap
+ */
+var map;
 var standard_zoom = 10;
 var all_layers = [];
 var lon;
@@ -357,6 +417,9 @@ var standard_style = {
     fillColor: "${color}"
 }
 
+/**
+ * Baut die Karte auf
+ */
 function drawmap() {
     OpenLayers.Lang.setCode('de');
 
@@ -390,6 +453,12 @@ function drawmap() {
     setCenter(lon,lat,zoom);
 }
 
+/**
+ * zentriert die Karte auf einen Punkt mit bestimmtem Zoom
+ * @param lng longitude
+ * @param lat latitude
+ * @param zoom zoomfaktor
+ */
 function setCenter(lng,lat, zoom) {
     map.setCenter(
         new OpenLayers.LonLat(lng || -47.9355023, lat || -15.7603797).transform(new OpenLayers.Projection("EPSG:4326"), map.getProjectionObject()),
@@ -397,6 +466,13 @@ function setCenter(lng,lat, zoom) {
     );
 }
 
+/**
+ * Fügt der Karte einen Kreis hinzu
+ * @param lng Longitude des Kreismittelpunkts
+ * @param lat Latitude des Kreismittelpunkts
+ * @param radius Radius des Kreises
+ * @param color Farbe des Kreises
+ */
 function addCircle(lng, lat, radius, color) {
     var lonLat = new OpenLayers.LonLat(lng, lat).transform(
         new OpenLayers.Projection("EPSG:4326"),
@@ -425,6 +501,9 @@ function addCircle(lng, lat, radius, color) {
     all_layers.push(layer);
 }
 
+/**
+ * Entfernt alle Kreise von der Karte
+ */
 function removeLayers() {
     while (all_layers.length > 0) {
         map.removeLayer(all_layers.pop());
@@ -435,9 +514,18 @@ function removeLayers() {
  * filter.js
  * Hier wird das Filter handling durchgeführt
  */
+
+/**
+ * initialisiert die Daten vor dem Filtern
+ */
 var initFilesForFilter = function(){
     filterNetwork("all");
 }
+
+/**
+ * Filtert die Daten nach dem Netzwerktyp
+ * @param network Netzwerktyp, nach dem gefiltert werden soll
+ */
 var filterNetwork = function(network){
     var filesArrayLength = objectLength(filesAsArray);
     sortedFilesArray = [];
@@ -461,7 +549,10 @@ var filterNetwork = function(network){
         }
     }
 }
-
+/**
+ * Filtert die Daten nach einer minimalen Bandbreite
+ * @param bandwidth die Minimalbandbreite
+ */
 var filterBandwidth = function(bandwidth){
     var valuesArrayLength = objectLength(sortedFilesArray);
     var tmpSortedArray = [];
@@ -472,7 +563,10 @@ var filterBandwidth = function(bandwidth){
     }
     sortedFilesArray = tmpSortedArray;
 }
-
+/**
+ * Filtert die Daten nach minimaler Signalstärke
+ * @param signal die minimale Signalstärke
+ */
 var filterSignal = function(signal){
     var valuesArrayLength = objectLength(sortedFilesArray);
     var tmpSortedArray = [];
@@ -484,19 +578,27 @@ var filterSignal = function(signal){
     sortedFilesArray = tmpSortedArray;
 }
 
+/**
+ * Filtert die Daten nach einem Uhrzeitbereich, auch über die Tagesgrenze (wenn Startzeit nach der Endzeit liegt.
+ * @param from Startuhrzeit
+ * @param to Enduhrzeit
+ */
 var filterDaytime = function(from,to){
     var valuesArrayLength = objectLength(sortedFilesArray);
     var tmpSortedArray = [];
     for (var i = 0; i < valuesArrayLength; i++) {
         var date = new Date(sortedFilesArray[i]["startLocation"]["datetime_unix"] * 1000);
         var starttime = date.getHours();
-        if(starttime >= from && starttime <= to) {
+        if((starttime >= from && starttime <= to && from < to)||(to< from && starttime >= from)||(to < from && starttime <= to)) {
             tmpSortedArray.push(sortedFilesArray[i]);
         }
     }
     sortedFilesArray = tmpSortedArray;
 }
 
+/**
+ * filtert die gefilterten Daten nach denen, die im Bildausschnitt liegen
+ */
 var filterMapLocation = function(){
     var valuesArrayLength = objectLength(sortedFilesArray);
     var tmpSortedArray = [];
@@ -512,9 +614,11 @@ var filterMapLocation = function(){
     calculateStatistics();
     drawStatistics();
     drawDiagrams();
-}/*
-*diagrams.js
+}
+/**
+ * diagrams.js
  */
+
 var totalcount;
 var highestbandwidth;
 var lowestbandwidth;
@@ -541,7 +645,9 @@ var averageunknownsignal;
 var averagebandwidth;
 var averagesignalstrength;
 
-
+/**
+ * berechnet Statistiken zu den Datenpunkten im Bildausschnitt
+ */
 var calculateStatistics = function(){
     if(sortedFilesMapArray.length>0){
         highestbandwidth=0;
@@ -644,6 +750,9 @@ var calculateStatistics = function(){
     }
 }
 
+/**
+ * baut die Statistiken als html-Code zusammen
+ */
 var drawStatistics= function(){
     if(sortedFilesMapArray.length>0) {
         var text = "<p>";
@@ -670,7 +779,9 @@ var drawStatistics= function(){
     }
 }
 
-
+/**
+ * erstellt Diagramme aus den gefilterten Daten
+ */
 var drawDiagrams = function(){
     if(sortedFilesMapArray.length > 0) {
         var data = {
@@ -764,6 +875,11 @@ var drawDiagrams = function(){
     }
 }
 
+/**
+ * Hilfsfunktion, die einen Colorstring aus einer iterationsvariable errechnet um jeden Balken/Slice eines Diagrammes zu färben
+ * @param number nummer der Iteration
+ * @returns {string} farbe des Balken/Slices für das Diagramm
+ */
 var getColor = function(number){
     var color='';
     switch(number){
