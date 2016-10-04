@@ -1,3 +1,6 @@
+/**
+ * Funktion, die die eingebene datei einliest und via postMessage zurück wirft
+ */
 getFile = function(file){
     var jsons = "";
     var loading = false;
@@ -35,6 +38,11 @@ onmessage = function(event){
     }
 }
 
+/**
+ * @param arr zeilenweise eingelesene datei
+ * @return retArray git ein Objekt Array mit Informationen zurück
+ * Funktion, die die eingelesenen Daten sortiert und als Objekt Array zurück gibt
+ */
 var parseArray = function(arr){
     var iteration  = 0;
     var index = 0;
@@ -98,7 +106,11 @@ var parseArray = function(arr){
     }
     return retArray;
 }
-
+/**
+ * @param size
+ * @return bandwith
+ * Funktion, die die Bandbreite über die File größe ermittelt (in kBps)
+ */
 var calcBandwidth = function(size){
     return size/10;
 }
